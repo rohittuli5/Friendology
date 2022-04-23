@@ -11,7 +11,7 @@ const mongoose = require('mongoose');
 app.use(cors());
 app.use(bodyParser.json());
 
-const uri = process.env.ATLAS_URI.toString();
+const uri = process.env.ATLAS_URI.toString()
 mongoose.connect(uri, { useNewUrlParser: true});
 const connection = mongoose.connection;
 connection.once('open', () => {

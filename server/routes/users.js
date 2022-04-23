@@ -51,20 +51,53 @@ router.route('/login').post((req, res) =>{
 
 })
 router.route('/update').put((req,res)=>{
-  const {email, password}=req.body;
-    //age,gender,marital_status,have_kids,cats_or_dogs,social_media_usage,health_conscious,
-    //optimist_realist_pessimist,personality_type,hobbies,profession,income_level
+    const {email, password}=req.body;
     const filter = { email: email,password:password};
     const update = req.body;
     
     User.findOneAndUpdate(filter,update, function(err){
       if (err){
         res.status(400).json("Bad Credentials")
-      } 
+      }else{
+        res.status(200).json("Data Updated");
+      }
     });
-  console.log(email);
-  res.json("fuck");
+    
+    
+});
+
+router.route('/findFriends').post(async (req,res)=>{
+  const email=req.body.email;
+  const filter = { email: email};
+  var users;
+  User.findOne(filter,function(err,curr_user){
+    if (err){
+      res.status(400).json("Bad Credentials");
+    }
+  });
+  var query =User.findOne(filter);
+  const currUser=await query.exec();
+  query=User.find({ email: {$ne: email}})
+  const usersList = await query.exec();
+  findFriends(currUser,usersList);
+  res.status(400).json(usersList);
+  
 
 });
 
+function findFriends(currUser,usersList) {
+  console.log(usersList);
+  var score=0;
+  
+  usersList.forEach(element => {
+    
+  });
+}
+function calculateMaritalSimilarity(currUser,element){
+  if(currUser.marital_status==element.marital_status){
+    return 5;
+  }else{
+    return 1;
+  }
+};
 module.exports = router;

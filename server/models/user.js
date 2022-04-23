@@ -24,7 +24,7 @@ const userSchema =new Schema({
         required:true,
         default:"default",
     },
-    martial_status:{
+    marital_status:{
         type:String,
         default:"default"
     },
