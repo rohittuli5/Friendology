@@ -70,7 +70,7 @@ const userSchema =new Schema({
     },
     economical_viewpoint:{
         type:Number,
-        default:-1,
+        default:-2,
     },
     latitude:{
         type:Number,

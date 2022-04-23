@@ -90,12 +90,12 @@ function findFriends(currUser,usersList) {
   var score=0;
   
   usersList.forEach(element => {
-    
+
   });
 }
 function calculateMaritalSimilarity(currUser,element){
   if(currUser.marital_status==element.marital_status){
-    return 5;
+    return 10;
   }else{
     return 1;
   }
