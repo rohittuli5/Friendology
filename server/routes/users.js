@@ -50,5 +50,21 @@ router.route('/login').post((req, res) =>{
   });
 
 })
+router.route('/update').put((req,res)=>{
+  const {email, password}=req.body;
+    //age,gender,marital_status,have_kids,cats_or_dogs,social_media_usage,health_conscious,
+    //optimist_realist_pessimist,personality_type,hobbies,profession,income_level
+    const filter = { email: email,password:password};
+    const update = req.body;
+    
+    User.findOneAndUpdate(filter,update, function(err){
+      if (err){
+        res.status(400).json("Bad Credentials")
+      } 
+    });
+  console.log(email);
+  res.json("fuck");
+
+});
 
 module.exports = router;
