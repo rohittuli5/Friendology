@@ -1,21 +1,17 @@
 import axios from "axios";
 
-const API_URL = "/auth";
+const API_URL = "users";
 
 const signup = (first,last,email, password) => {
   return axios
     .post(API_URL + "/signup", {
-      first,
-      last,
       email,
       password,
     })
     .then((response) => {
-      if (response.data.accessToken) {
-        localStorage.setItem("user", JSON.stringify(response.data));
-      }
+              localStorage.setItem("user", JSON.stringify(response.data));
 
-      return response.data;
+      // return response.data;
     });
 };
 
@@ -26,10 +22,7 @@ const login = (email, password) => {
       password,
     })
     .then((response) => {
-      if (response.data.accessToken) {
         localStorage.setItem("user", JSON.stringify(response.data));
-      }
-
       return response.data;
     });
 };

@@ -13,19 +13,14 @@ const [currentQuestion, setCurrentQuestion] = useState(0);
     const [gender,setGender]=useState(null);
     const [maritalstatus,setStatus]=useState(null);
     const [have_kids,setKids]=useState(0);
-    // cats_or_dogs:{
-    //     type:String,
-    //     default:"default",
-    // },
+    const [cats_or_dogs,setCat]=useState(0);
     const [social_media_usage,setMedia]=useState(null);
     const [health_conscious,setHealth]=useState(null);
     const [optimist_realist_pessimist,setORP]=useState(null);
-        const [personality_type,setPersonality]=useState(null);
-
+    const [personality_type,setPersonality]=useState(null);
     const [hobbies,setHobbies]=useState(null);
     const [profession,setProfession]=useState(null);
-        const [income_level,setIncome]=useState(null);
-
+    const [income_level,setIncome]=useState(null);
         const [political_viewpoint,setPolitical]=useState(null);
         const [economical_viewpoint,setEconomical]=useState(null);
         const [genre_of_music,setMusic]=useState(null);
@@ -85,10 +80,14 @@ const [currentQuestion, setCurrentQuestion] = useState(0);
           Kids:
           <input type="text" value={have_kids} onChange={(e)=>setKids(e.target.value)} />
         </label>
-                {/* cats_or_dogs:{
-                  type:String,
-                default:"default",
-    }, */}
+        <label>
+          Cats or Dog:
+          <select value={cats_or_dogs} onChange={(e)=>setCat(e.target.value)}>
+            <option value="Cat">Cat</option>
+            <option value="Dog">Dog</option>
+            <option value="Neither">Neither</option>
+          </select>
+        </label>
     <label>
           Social Media Usage:
           <select value={social_media_usage} onChange={(e)=>setMedia(e.target.value)}>

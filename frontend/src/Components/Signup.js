@@ -5,15 +5,15 @@ import { useNavigate } from "react-router-dom";
 const Signup = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [first, setFirst] = useState("");
-  const [last, setLast] = useState("");
+  const [age, setFirst] = useState("");
+  const [gender, setLast] = useState("");
 
   const navigate = useNavigate();
 
   const handleSignup = async (e) => {
     e.preventDefault();
     try {
-      await AuthService.signup(first,last,email, password).then(
+      await AuthService.signup(age,gender,email, password).then(
         (response) => {
           // check for token and user already exists with 200
           //   console.log("Sign up successfully", response);
@@ -33,23 +33,6 @@ const Signup = () => {
     <div>
       <form onSubmit={handleSignup}>
         <h3>Sign up</h3>
-<div className="mb-3">
-          <label>First name</label>
-          <input
-            type="text"
-            className="form-control"
-            placeholder="First name"
-            value={first}
-          onChange={(e) => setFirst(e.target.value)}
-          />
-        </div>
-        <div className="mb-3">
-          <label>Last name</label>
-          <input type="text" className="form-control" placeholder="Last name" 
-          value={last}
-          onChange={(e) => setLast(e.target.value)}
-          />
-        </div>
         <div className="mb-3">
           <label>Email address</label>
           <input
@@ -60,6 +43,24 @@ const Signup = () => {
           onChange={(e) => setEmail(e.target.value)}
           />
         </div>
+<div className="mb-3">
+          <label>Age</label>
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Age"
+            value={age}
+          onChange={(e) => setFirst(e.target.value)}
+          />
+        </div>
+        <div className="mb-3">
+          <label>Gender</label>
+          <input type="text" className="form-control" placeholder="Gender" 
+          value={gender}
+          onChange={(e) => setLast(e.target.value)}
+          />
+        </div>
+        
         <div className="mb-3">
           <label>Password</label>
           <input
