@@ -1,4 +1,3 @@
-
 function findFriends(currUser, usersList) {
 
 	console.log(usersList);
@@ -11,40 +10,75 @@ function findFriends(currUser, usersList) {
 
 		listStrings.forEach(element => {
 			score += ifSameString(currUser[element], user[element]);
-            console.log(element,score);
 		});
 
-		let listNumeric = ['social_media_usage','have_kids','health_conscious', 'optimist_realist_pessimist', 'political_viewpoint', 'economical_viewpoint'];
+		let listNumeric = ['social_media_usage', 'have_kids', 'health_conscious', 'optimist_realist_pessimist', 'political_viewpoint', 'economical_viewpoint'];
 
 
 		listNumeric.forEach(element => {
 			score += distance(currUser[element], user[element]);
-            console.log(element,score);
-
 		});
 
 
 		score += personalityComparator(currUser.personality_type, user.personality_type);
 
 		score += ageGap(currUser.age, user.age);
-        console.log(score);
 
 		score += music_and_movies(currUser.genre_of_music, user.genre_of_music);
-        score += music_and_movies(currUser.genre_of_movies, user.genre_of_movies);
+		score += music_and_movies(currUser.genre_of_movies, user.genre_of_movies);
 
 		potentialFriends.push({
-			key: score,
-			val: user.email
+			key: user,
+			val: score
 		});
 
 	});
 
 	potentialFriends.sort(function (a, b) {
-		return a.val.localeCompare(b.val);
+		return a.val>b.val;
 	});
 
 	return potentialFriends;
 
+}
+
+function findCommonFriends(currUser, usersList) {
+	var count = 0;
+
+	var hashSet = new Set();
+
+	var friendsofCurr = currUser['friends'];
+
+	var commonFriendsList = [];
+
+	friendsofCurr.forEach(friend => {
+		hashSet.add(friend);
+	})
+	usersList.forEach(user => {
+		count = 0;
+		let friendsofUser = user['friends'];
+		if (hashSet.has(user['email'])) {
+			//"They are already friends"
+			count=-100;
+		}
+		else{
+			friendsofUser.forEach(friend => {
+			if (hashSet.has(friend)) {
+				count += 1;
+			}
+			})
+		}
+		commonFriendsList.push({
+			key: user,
+			value: count
+		});
+
+	});
+	commonFriendsList=commonFriendsList.sort(function (a, b) {
+		return a.value<b.value;
+	});
+
+	return commonFriendsList;
 }
 
 function personalityComparator(currPersonality, userPersonality) {
@@ -55,7 +89,7 @@ function personalityComparator(currPersonality, userPersonality) {
 	if (currPersonality == "default" || userPersonality == "default") {
 		return 0;
 	}
-    
+
 	const similarPersonality = new Map();
 	similarPersonality.set("ISTJ", 8);
 	similarPersonality.set("ESTP", 8);
@@ -81,32 +115,34 @@ function personalityComparator(currPersonality, userPersonality) {
 	return 0;
 
 }
-function ageGap(currAge,userAge){
-    if(currAge==-1 || userAge==-1){
-        return 0;
-    }
-    if(Math.abs(currAge-userAge)>5){
-        return 0;
-    }
-	return 5-Math.abs(currAge-userAge);
+
+function ageGap(currAge, userAge) {
+	if (currAge == -1 || userAge == -1) {
+		return 0;
+	}
+	if (Math.abs(currAge - userAge) > 5) {
+		return 0;
+	}
+	return 5 - Math.abs(currAge - userAge);
 }
-function music_and_movies(currMusic,userMusic){
-    if(currMusic.length==0 || userMusic.length==0){
-        return 0;
-    }
-    const set=new Set();
-    userMusic.forEach((music)=>{
-        set.add(music);
-    });
-    var count=0;
-    for( let music of currMusic){
-        if(set.has(music)){
-            count+=2;
-        }
-    }
-    console.log(count);
-    return count;
+
+function music_and_movies(currMusic, userMusic) {
+	if (currMusic.length == 0 || userMusic.length == 0) {
+		return 0;
+	}
+	const set = new Set();
+	userMusic.forEach((music) => {
+		set.add(music);
+	});
+	var count = 0;
+	for (let music of currMusic) {
+		if (set.has(music)) {
+			count += 2;
+		}
+	}
+	return Math.min(count, 5);
 }
+
 function ifSameString(quality1, quality2) {
 
 	if (quality1 == "default" || quality2 == "default") {
@@ -128,9 +164,10 @@ function distance(currScore, userScore) {
 
 
 module.exports = {
-    findFriends,
-    distance,
-    personalityComparator,
-    ifSameString,
-    ageGap
+	findFriends,
+	distance,
+	personalityComparator,
+	ifSameString,
+	ageGap,
+	findCommonFriends
 }

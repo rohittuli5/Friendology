@@ -54,7 +54,7 @@ const userSchema =new Schema({
     },
     hobbies:{
         type:[String],
-        default:[""],
+        default:[],
     },
     profession:{
         type:String,
@@ -88,6 +88,10 @@ const userSchema =new Schema({
     genre_of_movies:{
         type:[String],
         default:[],
+    },
+    friends:{
+        type:[String],
+        default:[]
     }
 
 
