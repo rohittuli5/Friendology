@@ -1,20 +1,29 @@
 import React from "react";
 import logo from "./logo.svg";
 import "./App.css";
-import {useState} from 'react';
+import {Routes,Route,Link} from "react-router-dom"
+import AuthService from "./services/auth.service";
+import {useState, useEffect} from 'react';
 import './quiz.css';
-import questions from './question'
+import questions from './Components/question'
+import Login from "./Components/Login";
+import Signup from "./Components/Signup";
+import Home from "./Components/Home";
+import Private from"./Components/Private"
 function App() {
-  // const [data, setData] = React.useState(null);
+  const [currentUser, setCurrentUser] = useState(undefined);
 
-  
+  useEffect(() => {
+    const user = AuthService.getCurrentUser();
 
-  // React.useEffect(() => {
-  //   fetch("/api")
-  //     .then((res) => res.json())
-  //     .then((data) => setData(data.message));
-  // }, []);
+    if (user) {
+      setCurrentUser(user);
+    }
+  }, []);
 
+  const logOut=()=>{
+    AuthService.logout();
+  }
 
 const [currentQuestion, setCurrentQuestion] = useState(0);
 	const [showScore, setShowScore] = useState(false);
@@ -34,29 +43,59 @@ const [currentQuestion, setCurrentQuestion] = useState(0);
 	};
 	return (
     <div>
-    <h1>Personality Test</h1>
-		<div className='app'>
+      <div>
+      <nav className="navbar navbar-expand navbar-dark bg-dark">
+        <div className="navbar-nav mr-auto">
+          {/* <li className="nav-item">
+            <Link to={"/home"} className="nav-link">
+              Home
+            </Link>
+          </li> */}
 
-			{showScore ? (
-        <div className='score-section'>
-					You scored {score} out of {questions.length}
-				</div>
-			) : (
-        <>
-					<div className='question-section'>
-						<div className='question-count'>
-							<span>Question {currentQuestion + 1}</span>/{questions.length}
-						</div>
-						<div className='question-text'>{questions[currentQuestion].questionText}</div>
-					</div>
-					<div className='answer-section'>
-						{questions[currentQuestion].answerOptions.map((answerOption) => (
-              <button onClick={() => handleAnswerOptionClick(answerOption.isCorrect)}>{answerOption.answerText}</button>
-              ))}
-					</div>
-				</>
-			)}
-		</div>
+          {currentUser && (
+            <li className="nav-item">
+              <Link to={"/private"} className="nav-link">
+                Private
+              </Link>
+            </li>
+          )}
+        </div>
+
+        {currentUser ? (
+          <div className="navbar-nav ms-auto">
+            <li className="nav-item">
+              <a href="/login" className="nav-link" onClick={logOut}>
+                Logout
+              </a>
+            </li>
+          </div>
+        ) : (
+          <div className="navbar-nav ms-auto">
+            <li className="nav-item">
+              <Link to={"/login"} className="nav-link">
+                Login
+              </Link>
+            </li>
+
+            <li className="nav-item">
+              <Link to={"/signup"} className="nav-link">
+                Sign up
+              </Link>
+            </li>
+          </div>
+        )}
+      </nav>
+
+      <div className="container mt-3">
+        <Routes>
+          <Route path="/home" element={<Home />} />
+          {/* <Route path="/private" element={<Private />} /> */}
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+        </Routes>
+      </div>
+    </div>
+    
   </div>
   );
 
