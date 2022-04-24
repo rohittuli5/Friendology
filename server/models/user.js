@@ -1,4 +1,4 @@
-const mongoose = require('mongoose')
+    const mongoose = require('mongoose')
 
 const Schema = mongoose.Schema;
 
@@ -29,8 +29,8 @@ const userSchema =new Schema({
         default:"default"
     },
     have_kids:{
-        type:Boolean,
-        default:0,
+        type:Number,
+        default:-1,
     },
     cats_or_dogs:{
         type:String,
@@ -70,7 +70,7 @@ const userSchema =new Schema({
     },
     economical_viewpoint:{
         type:Number,
-        default:-2,
+        default:-1,
     },
     latitude:{
         type:Number,
@@ -81,13 +81,13 @@ const userSchema =new Schema({
         default:-1,
     },
     genre_of_music:{
-        type:String,
-        default:"default",
+        type:[String],
+        default:[],
 
     },
     genre_of_movies:{
-        type:String,
-        default:"default",
+        type:[String],
+        default:[],
     }
 
 
