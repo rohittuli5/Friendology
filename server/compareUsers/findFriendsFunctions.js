@@ -52,13 +52,10 @@ function findCommonFriends(currUser, usersList) {
 	var commonFriendsList = [];
 
 	friendsofCurr.forEach(friend => {
-	    console.log(friend)
 		hashSet.add(friend);
 	})
-	console.log(hashSet.has("alpha"));
 	usersList.forEach(user => {
 		count = 0;
-		console.log(user);
 		let friendsofUser = user['friends'];
 		if (hashSet.has(user['email'])) {
 			//"They are already friends"
