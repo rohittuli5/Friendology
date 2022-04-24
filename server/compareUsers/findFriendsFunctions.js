@@ -1,8 +1,11 @@
 function findFriends(currUser, usersList) {
 
-	console.log(usersList);
-
 	var potentialFriends = [];
+	var friendsofCurr=currUser['friends'];
+	var hashSet = new Set();
+	friendsofCurr.forEach(friend => {
+		hashSet.add(friend);
+	})
 
 	usersList.forEach(user => {
 		let score = 0;
@@ -27,66 +30,80 @@ function findFriends(currUser, usersList) {
 		score += music_and_movies(currUser.genre_of_music, user.genre_of_music);
 		score += music_and_movies(currUser.genre_of_movies, user.genre_of_movies);
 
-		potentialFriends.push({
-			key: user,
-			val: score
-		});
+		let friendsofUser = user['friends'];
+		if (hashSet.has(user['email'])) {
+		}
+		else{
+			friendsofUser.forEach(friend => {
+				if (hashSet.has(friend)) {
+					score += 2;
+				}
+			})
+			potentialFriends.push({
+				key: user,
+				value: score
+			});
+		}
+		console.log(score);
 
 	});
 
 	potentialFriends.sort(function (a, b) {
-		return a.val>b.val;
+		return a.value>b.value;
 	});
-
 	return potentialFriends;
 
 }
 
-function findCommonFriends(currUser, usersList) {
-	var count = 0;
-
-	var hashSet = new Set();
-
-	var friendsofCurr = currUser['friends'];
-
-	var commonFriendsList = [];
-
-	friendsofCurr.forEach(friend => {
-		hashSet.add(friend);
-	})
-	usersList.forEach(user => {
-		count = 0;
-		let friendsofUser = user['friends'];
-		if (hashSet.has(user['email'])) {
-			//"They are already friends"
-			count=-100;
+function updateWeights(user){
+	var hashMap=new Map();
+	var userFriends=user['friends'];
+	for (const key in user){
+		if(key!='email' && key!='password' && key!='friends'){
+			hashMap.set(key,0);
 		}
-		else{
-			friendsofUser.forEach(friend => {
-			if (hashSet.has(friend)) {
-				count += 1;
-			}
-			})
-		}
-		commonFriendsList.push({
-			key: user,
-			value: count
+	}
+	userFriends.forEach(friend=>{
+		let listStrings = ['gender', 'marital_status', 'cats_or_dogs', 'profession'];
+
+		listStrings.forEach(element => {
+			hashMap[element]+=ifSameString(currUser[element], user[element]);
 		});
 
-	});
-	commonFriendsList=commonFriendsList.sort(function (a, b) {
-		return a.value<b.value;
-	});
+		let listNumeric = ['social_media_usage', 'have_kids', 'health_conscious', 'optimist_realist_pessimist', 'political_viewpoint', 'economical_viewpoint'];
 
-	return commonFriendsList;
+
+		listNumeric.forEach(element => {
+			hashMap[element]+= distance(currUser[element], user[element]);
+		});
+
+
+		hashMap['personality_type']+= personalityComparator(currUser.personality_type, user.personality_type);
+
+		hashMap['age']+= ageGap(currUser.age, user.age);
+		
+		hashMap['music'] += music_and_movies(currUser.genre_of_music, user.genre_of_music);
+		hashMap['movies'] += music_and_movies(currUser.genre_of_movies, user.genre_of_movies);
+
+	});
+	var l=userFriends.length;
+	for (const [key, value] of Object.entries(hashMap)) {
+		hashMap[key]/=l;
+	  }
+	var weightArray=[];
+	// let start=hashMap.size();
+	for (const [key, value] of Object.entries(hashMap)) {
+		weightArray.push([key,value]);
+	  }
+	console.log(weightArray);
+	
 }
-
 function personalityComparator(currPersonality, userPersonality) {
 
 	// src="https://due.com/blog/key-personality-types/
 	// Which pair of personalities stick together"
 
-	if (currPersonality == "default" || userPersonality == "default") {
+	if (currPersonality === "default" || userPersonality === "default") {
 		return 0;
 	}
 
@@ -169,5 +186,5 @@ module.exports = {
 	personalityComparator,
 	ifSameString,
 	ageGap,
-	findCommonFriends
+	updateWeights
 }
