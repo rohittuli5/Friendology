@@ -6,7 +6,6 @@ import { useNavigate } from "react-router-dom";
 import Form from 'react-bootstrap/Form'
 
 const Home = () => {
-  const[client,setUser]=useState(null);
   	const [email, setemail] = useState(0);
     const [password,setpassword]=useState(0);
     const [age,setAge]=useState(0);
@@ -27,14 +26,36 @@ const Home = () => {
         const [genre_of_movies,setMovies]=useState(null);
                 const [latitude,setLatitude]=useState(null);
     const [longitude,setLongitude]=useState(null);
-
+    const[friends,setFriends]=useState(null)
   const [currentUser, setCurrentUser] = useState(undefined);
   
   useEffect(() => {
     const user = AuthService.getCurrentUser();
     if (user) {
-       setUser(localStorage.getItem("user"));;
+
       setCurrentUser(user);
+      setemail(user['email'])
+      setpassword(user['password'])
+      setAge(user['age'])
+      setGender(user['gender'])
+      setStatus(user['marital_status'])
+      setKids(user['setKids'])
+      setCat(user['cats_or_dogs'])
+      setMedia(user['social_media_usage'])
+      setHealth(user['health_conscious'])
+      setORP(user['optimist_realist_pessimist'])
+      setPersonality(user['personality_type'])
+      setHobbies(user['hobbies'])
+      setProfession(user['profession'])
+      setIncome(user['income_level'])
+      setPolitical(user['political_viewpoint'])
+      setEconomical(user['economical_viewpoint'])
+      setMusic(user['genre_of_music'])
+      setMovies(user['genre_of_movies'])
+      setLatitude(user['latitude'])
+      setLongitude(user['longitude'])
+      setFriends(['a@gmail.com,b@gmail.com,c@gmail.com'])
+      
     }
   }, []);
   const navigate = useNavigate();
@@ -44,7 +65,7 @@ const Home = () => {
     try {
       await AuthService.update(email, password,age,gender,marital_status,have_kids,cats_or_dogs,
   social_media_usage,health_conscious,optimist_realist_pessimist,personality_type,hobbies,profession,income_level,political_viewpoint,
-  economical_viewpoint,genre_of_music,genre_of_movies,latitude,longitude).then(
+  economical_viewpoint,genre_of_music,genre_of_movies,latitude,longitude,friends).then(
         () => {
           navigate("/friends_list");
           window.location.reload();
@@ -62,7 +83,7 @@ const Home = () => {
     <div>
         <h1>Please Complete your Profile</h1>
 		<Form onSubmit={handleSubmit}>
-        <label>
+        {/* <label>
           Age:
           <input type="text" value={age} onChange={(e)=>setAge(e.target.value)} />
         </label>
@@ -73,7 +94,7 @@ const Home = () => {
             <option value="Female">Female</option>
             <option value="Lol">Don't Know</option>
           </select>
-        </label>
+        </label> */}
         <label>
           Marital Status:
           <select value={marital_status} onChange={(e)=>setStatus(e.target.value)}>
