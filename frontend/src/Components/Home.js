@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from "react";
 // import PostService from "../services/post.service";
 import 'bootstrap/dist/css/bootstrap.min.css'
-
-import questions from "./question";
+import AuthService from "../services/auth.service";
+import { useNavigate } from "react-router-dom";
 import Form from 'react-bootstrap/Form'
 
 const Home = () => {
-const [currentQuestion, setCurrentQuestion] = useState(0);
-	const [showScore, setShowScore] = useState(false);
-	const [score, setScore] = useState(0);
+  const[client,setUser]=useState(null);
+  	const [email, setemail] = useState(0);
+    const [password,setpassword]=useState(0);
     const [age,setAge]=useState(0);
     const [gender,setGender]=useState(null);
-    const [maritalstatus,setStatus]=useState(null);
+    const [marital_status,setStatus]=useState(null);
     const [have_kids,setKids]=useState(0);
     const [cats_or_dogs,setCat]=useState(0);
     const [social_media_usage,setMedia]=useState(null);
@@ -25,37 +25,43 @@ const [currentQuestion, setCurrentQuestion] = useState(0);
         const [economical_viewpoint,setEconomical]=useState(null);
         const [genre_of_music,setMusic]=useState(null);
         const [genre_of_movies,setMovies]=useState(null);
-    // latitude:{
-    //     type:Number,
-    //     default:-1,
-    // },
-    // longitude:{
-    //     type:Number,
-    //     default:-1,
-    // },
-        // this.handleSubmit = this.handleSubmit.bind(this);
+                const [latitude,setLatitude]=useState(null);
+    const [longitude,setLongitude]=useState(null);
 
-    const handleAnswerOptionClick = (isCorrect) => {
-		if (isCorrect) {
-			setScore(score + 1);
-		}
+  const [currentUser, setCurrentUser] = useState(undefined);
+  
+  useEffect(() => {
+    const user = AuthService.getCurrentUser();
+    if (user) {
+       setUser(localStorage.getItem("user"));;
+      setCurrentUser(user);
+    }
+  }, []);
+  const navigate = useNavigate();
 
-		const nextQuestion = currentQuestion + 1;
-		if (nextQuestion < questions.length) {
-			setCurrentQuestion(nextQuestion);
-		} else {
-			setShowScore(true);
-		}
-	};
-
-  const handleSubmit=()=> {
-    alert('Submitted');
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await AuthService.update(email, password,age,gender,marital_status,have_kids,cats_or_dogs,
+  social_media_usage,health_conscious,optimist_realist_pessimist,personality_type,hobbies,profession,income_level,political_viewpoint,
+  economical_viewpoint,genre_of_music,genre_of_movies,latitude,longitude).then(
+        () => {
+          navigate("/friends_list");
+          window.location.reload();
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
     <div>
         <h1>Please Complete your Profile</h1>
-		<Form onSubmit={()=>handleSubmit}>
+		<Form onSubmit={handleSubmit}>
         <label>
           Age:
           <input type="text" value={age} onChange={(e)=>setAge(e.target.value)} />
@@ -70,7 +76,7 @@ const [currentQuestion, setCurrentQuestion] = useState(0);
         </label>
         <label>
           Marital Status:
-          <select value={maritalstatus} onChange={(e)=>setStatus(e.target.value)}>
+          <select value={marital_status} onChange={(e)=>setStatus(e.target.value)}>
             <option value="Married">Married</option>
             <option value="Single">Single</option>
             <option value="In Relationship">In Relationship</option>
