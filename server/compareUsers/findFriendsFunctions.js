@@ -58,14 +58,16 @@ function findCommonFriends(currUser, usersList) {
 		hashMap.clear();
 		let friendsofUser = user['friends'];
 		if (hashMap.has(currUser['email'])) {
-			//"They are alread friends"
-			return 0;
+			//"They are already friends"
+			count=-100;
 		}
-		friendsofUser.forEach(friend => {
+		else{
+			friendsofUser.forEach(friend => {
 			if (hashMap.has(friend)) {
 				count += 1;
 			}
-		})
+			})
+		}
 		commonFriendsList.push({
 			key: count,
 			score: count
