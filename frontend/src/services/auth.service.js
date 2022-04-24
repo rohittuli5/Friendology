@@ -2,9 +2,11 @@ import axios from "axios";
 
 const API_URL = "/auth";
 
-const signup = (email, password) => {
+const signup = (first,last,email, password) => {
   return axios
     .post(API_URL + "/signup", {
+      first,
+      last,
       email,
       password,
     })
