@@ -28,14 +28,14 @@ function findFriends(currUser, usersList) {
 		score += music_and_movies(currUser.genre_of_movies, user.genre_of_movies);
 
 		potentialFriends.push({
-			key: score,
-			val: user.email
+			key: user,
+			val: score
 		});
 
 	});
 
 	potentialFriends.sort(function (a, b) {
-		return a.val.localeCompare(b.val);
+		return a.val>b.val;
 	});
 
 	return potentialFriends;
@@ -44,38 +44,41 @@ function findFriends(currUser, usersList) {
 
 function findCommonFriends(currUser, usersList) {
 	var count = 0;
-	let hashMap = new Map();
-	let friendsofCurr = currUser['friends'];
+
+	var hashSet = new Set();
+
+	var friendsofCurr = currUser['friends'];
+
 	var commonFriendsList = [];
+
 	friendsofCurr.forEach(friend => {
-		hashMap.add({
-			key: friend,
-			value: 1
-		});
+	    console.log(friend)
+		hashSet.add(friend);
 	})
+	console.log(hashSet.has("alpha"));
 	usersList.forEach(user => {
 		count = 0;
-		hashMap.clear();
+		console.log(user);
 		let friendsofUser = user['friends'];
-		if (hashMap.has(currUser['email'])) {
+		if (hashSet.has(user['email'])) {
 			//"They are already friends"
 			count=-100;
 		}
 		else{
 			friendsofUser.forEach(friend => {
-			if (hashMap.has(friend)) {
+			if (hashSet.has(friend)) {
 				count += 1;
 			}
 			})
 		}
 		commonFriendsList.push({
-			key: count,
-			score: count
+			key: user,
+			value: count
 		});
 
 	});
-	commonFriendsList.sort(function (a, b) {
-		return a.val.localeCompare(b.val);
+	commonFriendsList=commonFriendsList.sort(function (a, b) {
+		return a.value<b.value;
 	});
 
 	return commonFriendsList;
