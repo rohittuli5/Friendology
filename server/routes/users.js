@@ -66,21 +66,18 @@ router.route('/login').post((req, res) => {
 
 
 })
-router.route('/update').put((req, res) => {
-	const user=req.body;
-	const email=req.email;
-	const password=req.password;
+router.route('/update').put(async (req, res) => {
+	const email=req.body.email;
+	const password=req.body.password;
 	const filter = {
 		email: email,
 		password: password
 	};
 	var update = req.body;
-	console.log(update);
-	User.findOneAndUpdate(filter, update, function (err,user) {
+	User.updateOne(filter, update,{new:true}, function (err,user) {
 		if (err) {
 			res.status(400).json("Bad Credentials")
 		} else {
-			console.log(user);
 			res.status(200).json("Data Updated");
 		}
 	});
@@ -114,13 +111,27 @@ router.route('/findFriends').post(async (req, res) => {
 				}
 			})
 			const usersList = await query.exec();
-			// query=Weights.find({
-			// 	email:email
-			// });
+			query=Weights.findOne({
+				email:email
+			},function (err,doc){
+				if(err){
+					res.status(400).json('Unable to set weights');
+				}
+				var weightsCurr;
+				if(!doc){
+					weightsCurr=new Weights({
+						email:email
+					});
+					weightsCurr.save();
+				}else{
+					weightsCurr=doc;
+					weightsCurr=friends.updateWeights(currUser,usersList,weightsCurr);
+				}
+				let potentialFriends = friends.findFriends(currUser, usersList,weightsCurr);
+				res.status(200).json(potentialFriends);
+			});
 			// const weightsCurr=await query.exec();
-			let potentialFriends = friends.findFriends(currUser, usersList);
 
-			res.status(200).json(potentialFriends);
 		}
 	});
 
