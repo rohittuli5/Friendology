@@ -135,14 +135,20 @@ const Home = () => {
       let hobbies_list=user['hobbies'];
       let movie_genre_list=user['genre_of_movies'];
       let music_genre_list=user['genre_of_music'];
-      for(let i=0;i<hobbies_list.length;i++){
-        hobbies[hobbies_list[i]]=true
+      if(hobbies_list){
+        for(let i=0;i<hobbies_list.length;i++){
+          hobbies[hobbies_list[i]]=true
+        }
       }
-      for(let i=0;i<movie_genre_list.length;i++){
-        genre_of_movies[movie_genre_list[i]]=true
+      if(movie_genre_list){
+        for(let i=0;i<movie_genre_list.length;i++){
+          genre_of_movies[movie_genre_list[i]]=true
+        }
       }
-      for(let i=0;i<music_genre_list.length;i++){
-        genre_of_music[music_genre_list[i]]=true
+      if(music_genre_list){
+        for(let i=0;i<music_genre_list.length;i++){
+          genre_of_music[music_genre_list[i]]=true
+        }
       }
     }
   }, []);
