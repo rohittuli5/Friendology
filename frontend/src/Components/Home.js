@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 import Form from 'react-bootstrap/Form'
 import MenuItem from '@mui/material/MenuItem';
 import Slider from '@mui/material/Slider';
-import { InputLabel, TextField, Typography } from "@mui/material";
+import { InputLabel, ListItem, TextField, Typography } from "@mui/material";
 import FormLabel from '@mui/material/FormLabel';
 import FormControl from '@mui/material/FormControl';
 import FormGroup from '@mui/material/FormGroup';
@@ -17,6 +17,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormHelperText from '@mui/material/FormHelperText';
 import Checkbox from '@mui/material/Checkbox';
 import Button from '@mui/material/Button';
+import Chip from '@mui/material/Chip';
 
 const Home = () => {
   	const [email, setemail] = useState(0);
@@ -34,6 +35,7 @@ const Home = () => {
     const [income_level,setIncome]=useState(0);
     const [political_viewpoint,setPolitical]=useState(0);
     const [economical_viewpoint,setEconomical]=useState(0);
+    const [current_friend, setCurrentFriend]=useState("");
     const [hobbies,setHobbies]=useState({
       reading:false,
       travelling:false,
@@ -103,7 +105,7 @@ const Home = () => {
         
   const [latitude,setLatitude]=useState(null);
   const [longitude,setLongitude]=useState(null);
-  const[friends,setFriends]=useState(null)
+  const[friends,setFriends]=useState([])
   const [currentUser, setCurrentUser] = useState(undefined);
   
   useEffect(() => {
@@ -129,7 +131,7 @@ const Home = () => {
       setEconomical(user['economical_viewpoint'])
       setLatitude(user['latitude'])
       setLongitude(user['longitude'])
-      setFriends(['a@gmail.com,b@gmail.com,c@gmail.com'])
+      setFriends(user['friends'])
       let hobbies_list=user['hobbies'];
       let movie_genre_list=user['genre_of_movies'];
       let music_genre_list=user['genre_of_music'];
@@ -145,6 +147,22 @@ const Home = () => {
     }
   }, []);
   const navigate = useNavigate();
+
+  const addFriend=()=>{
+    setFriends([...friends,current_friend])
+  }
+  const handleDeleteFriend = (friendToDelete) => () => {
+    let new_list=[];
+    console.log(friendToDelete)
+    console.log(friends)
+    for(let i=0;i<friends.length;i+=1){
+      if(friends[i]!=friendToDelete){
+        console.log(friends[i])
+        new_list.push(friends[i]);
+      }
+    }
+    setFriends(new_list);
+  };
 
   const handleSubmit = async (e) => {
     const hobbyList=[]
@@ -402,7 +420,7 @@ const Home = () => {
           <br/>
         </Grid>
         <Grid item xs={12}>
-          <Typography variant="h5" component="h5" fullWidth>General </Typography>
+          <Typography variant="h5" component="h5" fullWidth>Section 1: General </Typography>
           
         </Grid>
         <Grid item xs={4}>
@@ -466,7 +484,7 @@ const Home = () => {
         </TextField>
         </Grid>
         <Grid item xs={12}>
-        <Typography variant="h5" component="h5">Rate yourself on 1-5 scale</Typography>
+        <Typography variant="h5" component="h5">Section 2: Rate yourself on 1-5 scale</Typography>
         <Typography variant="h6" component="h6">1 means least, 5 means most</Typography>
         <br/>
         </Grid>
@@ -567,8 +585,8 @@ const Home = () => {
               />
               </Grid>
     <Grid item xs={12}>
-    <Typography variant="h5" container="h5">Choose Top 3</Typography>
-    <br/>
+    <Typography variant="h5" container="h5">Section 3: Interests</Typography>
+    
     </Grid> 
 
     <Grid item xs={4} direction="column" alignItems="center"
@@ -778,6 +796,29 @@ const Home = () => {
         
         <FormHelperText>Select Maximum 3</FormHelperText>
       </FormControl>
+    </Grid>
+    <Grid item xs={12} direction="column" alignItems="center"
+    justifyContent="center">
+    <Typography variant="h5" container="h5">Section 4: Friends</Typography>
+    <br/>
+    </Grid>
+    <Grid item xs={6} direction="row">
+    <InputLabel>Add Friends</InputLabel>
+    <TextField id="current_friend" variant="outlined" style={{width:"90%"}} label="Friend's Email" value={current_friend} onChange={(e)=>setCurrentFriend(e.target.value)}></TextField>
+    </Grid>
+    <Grid item xs={6} direction="row">
+    <Button variant="contained" onClick={addFriend} marginLeft={3}>Add</Button>
+    </Grid>
+    
+    <Grid item xs={12} direction="row">
+    {friends.map((friend)=>{
+      return(
+        <ListItem>
+        <Chip label={friend} onDelete={handleDeleteFriend(friend)}>
+        </Chip>
+        </ListItem>
+      );
+    })}
     </Grid>
     <Grid item xs={12} direction="column" alignItems="center"
     justifyContent="center">
