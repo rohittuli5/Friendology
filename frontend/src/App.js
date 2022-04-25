@@ -1,15 +1,16 @@
 import React from "react";
 import logo from "./logo.svg";
 import "./App.css";
-import {Routes,Route,Link} from "react-router-dom"
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 import AuthService from "./services/auth.service";
 import {useState, useEffect} from 'react';
-// import './quiz.css';
 import Login from "./Components/Login";
 import Signup from "./Components/Signup";
 import Home from "./Components/Home";
 import 'bootstrap/dist/css/bootstrap.min.css'
 import Friends from "./Components/Friends"
+import '../node_modules/bootstrap/dist/css/bootstrap.min.css'
+
 function App() {
   const [currentUser, setCurrentUser] = useState(undefined);
 
@@ -26,8 +27,8 @@ function App() {
   }
 
 	return (
-    <div style={{backgroundColor:"#0B0C10", width:"100%", height:"100%"}}>
-      <div>
+    <div >
+      <div >
       <nav className="navbar navbar-expand navbar-dark bg-dark">
         <div className="navbar-nav mr-auto">
           {currentUser &&(
@@ -72,7 +73,8 @@ function App() {
         )}
       </nav>
 
-      <div className="container mt-3">
+      <div className="auth-wrapper container mt-3">
+
         <Routes>
           <Route path="/home" element={<Home />} />
           {/* <Route path="/private" element={<Private />} /> */}

@@ -164,7 +164,7 @@ const Friends = () => {
 
   return (
     <div style={{backgroundColor: 'gray'}}>
-      <h1>Recomended Friends List</h1>
+      <h1 style={{color:'#ffffff'}}>Recomended Friends List</h1>
       <hr />
 <Tab.Container id="list-group-tabs-example" 
 >
