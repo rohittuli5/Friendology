@@ -44,7 +44,7 @@ const [currentQuestion, setCurrentQuestion] = useState(0);
 		}
 	};
 	return (
-    <div>
+    <div style={{backgroundColor:"#0B0C10", width:"100%", height:"100%"}}>
       <div>
       <nav className="navbar navbar-expand navbar-dark bg-dark">
         <div className="navbar-nav mr-auto">
