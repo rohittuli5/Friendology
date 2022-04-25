@@ -44,7 +44,6 @@ function findFriends(currUser, usersList) {
 				value: score
 			});
 		}
-		console.log(score);
 
 	});
 	potentialFriends.sort(function (a, b) {
@@ -55,47 +54,59 @@ function findFriends(currUser, usersList) {
 
 }
 
-function updateWeights(user){
+function updateWeights(currUser,usersList,weightsCurr){
+	if(!currUser){
+		return 0;
+	}
 	var hashMap=new Map();
-	var userFriends=user['friends'];
-	for (const key in user){
+	var userFriends=currUser['friends'];
+	var emailExists=new Map();
+	usersList.forEach(element=>{
+		emailExists.set(element['email'],element);
+	})
+	console.log(currUser.keys());
+	for (const key in currUser){
 		if(key!='email' && key!='password' && key!='friends'){
 			hashMap.set(key,0);
 		}
 	}
-	userFriends.forEach(friend=>{
-		let listStrings = ['gender', 'marital_status', 'cats_or_dogs', 'profession'];
 
-		listStrings.forEach(element => {
-			hashMap[element]+=ifSameString(currUser[element], user[element]);
-		});
-
-		let listNumeric = ['social_media_usage', 'have_kids', 'health_conscious', 'optimist_realist_pessimist', 'political_viewpoint', 'economical_viewpoint'];
-
-
-		listNumeric.forEach(element => {
-			hashMap[element]+= distance(currUser[element], user[element]);
-		});
-
-
-		hashMap['personality_type']+= personalityComparator(currUser.personality_type, user.personality_type);
-
-		hashMap['age']+= ageGap(currUser.age, user.age);
-		
-		hashMap['music'] += music_and_movies(currUser.genre_of_music, user.genre_of_music);
-		hashMap['movies'] += music_and_movies(currUser.genre_of_movies, user.genre_of_movies);
-
+	userFriends.forEach(email=>{
+		if(emailExists.has(email)){
+			let user=emailExists[email];
+			let listStrings = ['gender', 'marital_status', 'cats_or_dogs', 'profession'];
+			
+			listStrings.forEach(element => {
+				hashMap[element]+=ifSameString(currUser[element], user[element]);
+			});
+			
+			let listNumeric = ['social_media_usage', 'have_kids', 'health_conscious', 'optimist_realist_pessimist', 'political_viewpoint', 'economical_viewpoint'];
+			
+			
+			listNumeric.forEach(element => {
+				hashMap[element]+= distance(currUser[element], user[element]);
+			});
+			
+			
+			hashMap['personality_type']+= personalityComparator(currUser.personality_type, user.personality_type);
+			
+			hashMap['age']+= ageGap(currUser.age, user.age);
+			
+			hashMap['music'] += music_and_movies(currUser.genre_of_music, user.genre_of_music);
+			hashMap['movies'] += music_and_movies(currUser.genre_of_movies, user.genre_of_movies);
+		}
+			
 	});
 	var l=userFriends.length;
 	for (const [key, value] of Object.entries(hashMap)) {
 		hashMap[key]/=l;
 	  }
-	var weightArray=[];
-	// let start=hashMap.size();
+	let start=hashMap.keys();
+	console.log(start);
 	for (const [key, value] of Object.entries(hashMap)) {
-		weightArray.push([key,value]);
+		weightsCurr[key]=value;
 	  }
-	console.log(weightArray);
+	console.log(weightsCurr);
 }
 function personalityComparator(currPersonality, userPersonality) {
 
