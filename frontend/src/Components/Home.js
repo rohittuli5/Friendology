@@ -122,17 +122,26 @@ const Home = () => {
       setHealth(user['health_conscious'])
       setORP(user['optimist_realist_pessimist'])
       setPersonality(user['personality_type'])
-      setHobbies(user['hobbies'])
+      
       setProfession(user['profession'])
       setIncome(user['income_level'])
       setPolitical(user['political_viewpoint'])
       setEconomical(user['economical_viewpoint'])
-      setMusic(user['genre_of_music'])
-      setMovies(user['genre_of_movies'])
       setLatitude(user['latitude'])
       setLongitude(user['longitude'])
       setFriends(['a@gmail.com,b@gmail.com,c@gmail.com'])
-      
+      let hobbies_list=user['hobbies'];
+      let movie_genre_list=user['genre_of_movies'];
+      let music_genre_list=user['genre_of_music'];
+      for(let i=0;i<hobbies_list.length;i++){
+        hobbies[hobbies_list[i]]=true
+      }
+      for(let i=0;i<movie_genre_list.length;i++){
+        genre_of_movies[movie_genre_list[i]]=true
+      }
+      for(let i=0;i<music_genre_list.length;i++){
+        genre_of_music[music_genre_list[i]]=true
+      }
     }
   }, []);
   const navigate = useNavigate();
