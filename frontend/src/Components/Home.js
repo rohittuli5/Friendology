@@ -155,7 +155,12 @@ const Home = () => {
   const navigate = useNavigate();
 
   const addFriend=()=>{
-    setFriends([...friends,current_friend])
+    if(friends){
+      setFriends([...friends,current_friend])
+    }
+    else{
+      setFriends([current_friend]);
+    }
   }
   const handleDeleteFriend = (friendToDelete) => () => {
     let new_list=[];
@@ -817,7 +822,7 @@ const Home = () => {
     </Grid>
     
     <Grid item xs={12} direction="row">
-    {friends.map((friend)=>{
+    {friends && friends.map((friend)=>{
       return(
         <ListItem>
         <Chip label={friend} onDelete={handleDeleteFriend(friend)}>
