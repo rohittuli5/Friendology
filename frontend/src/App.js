@@ -5,11 +5,9 @@ import {Routes,Route,Link} from "react-router-dom"
 import AuthService from "./services/auth.service";
 import {useState, useEffect} from 'react';
 // import './quiz.css';
-import questions from './Components/question'
 import Login from "./Components/Login";
 import Signup from "./Components/Signup";
 import Home from "./Components/Home";
-import Private from"./Components/Private"
 import 'bootstrap/dist/css/bootstrap.min.css'
 
 function App() {
@@ -27,22 +25,6 @@ function App() {
     AuthService.logout();
   }
 
-const [currentQuestion, setCurrentQuestion] = useState(0);
-	const [showScore, setShowScore] = useState(false);
-	const [score, setScore] = useState(0);
-
-	const handleAnswerOptionClick = (isCorrect) => {
-		if (isCorrect) {
-			setScore(score + 1);
-		}
-
-		const nextQuestion = currentQuestion + 1;
-		if (nextQuestion < questions.length) {
-			setCurrentQuestion(nextQuestion);
-		} else {
-			setShowScore(true);
-		}
-	};
 	return (
     <div style={{backgroundColor:"#0B0C10", width:"100%", height:"100%"}}>
       <div>

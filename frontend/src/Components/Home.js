@@ -4,6 +4,8 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import Grid from '@mui/material/Grid'
 import Paper from '@mui/material/Paper'
 import questions from "./question";
+import AuthService from "../services/auth.service";
+import { useNavigate } from "react-router-dom";
 import Form from 'react-bootstrap/Form'
 import MenuItem from '@mui/material/MenuItem';
 import Slider from '@mui/material/Slider';
@@ -17,9 +19,8 @@ import Checkbox from '@mui/material/Checkbox';
 import Button from '@mui/material/Button';
 
 const Home = () => {
-const [currentQuestion, setCurrentQuestion] = useState(0);
-	const [showScore, setShowScore] = useState(false);
-	const [score, setScore] = useState(0);
+  	const [email, setemail] = useState(0);
+    const [password,setpassword]=useState(0);
     const [age,setAge]=useState(0);
     const [gender,setGender]=useState("Male");
     const [maritalstatus,setStatus]=useState("Single");
@@ -98,21 +99,61 @@ const [currentQuestion, setCurrentQuestion] = useState(0);
         [event.target.name]: event.target.checked,
       });
     };
-    const handleAnswerOptionClick = (isCorrect) => {
-		if (isCorrect) {
-			setScore(score + 1);
-		}
+    
+        
+  const [latitude,setLatitude]=useState(null);
+  const [longitude,setLongitude]=useState(null);
+  const[friends,setFriends]=useState(null)
+  const [currentUser, setCurrentUser] = useState(undefined);
+  
+  useEffect(() => {
+    const user = AuthService.getCurrentUser();
+    if (user) {
 
-		const nextQuestion = currentQuestion + 1;
-		if (nextQuestion < questions.length) {
-			setCurrentQuestion(nextQuestion);
-		} else {
-			setShowScore(true);
-		}
-	};
+      setCurrentUser(user);
+      setemail(user['email'])
+      setpassword(user['password'])
+      setAge(user['age'])
+      setGender(user['gender'])
+      setStatus(user['marital_status'])
+      setKids(user['setKids'])
+      setCat(user['cats_or_dogs'])
+      setMedia(user['social_media_usage'])
+      setHealth(user['health_conscious'])
+      setORP(user['optimist_realist_pessimist'])
+      setPersonality(user['personality_type'])
+      setHobbies(user['hobbies'])
+      setProfession(user['profession'])
+      setIncome(user['income_level'])
+      setPolitical(user['political_viewpoint'])
+      setEconomical(user['economical_viewpoint'])
+      setMusic(user['genre_of_music'])
+      setMovies(user['genre_of_movies'])
+      setLatitude(user['latitude'])
+      setLongitude(user['longitude'])
+      setFriends(['a@gmail.com,b@gmail.com,c@gmail.com'])
+      
+    }
+  }, []);
+  const navigate = useNavigate();
 
-  const handleSubmit=()=> {
-    alert('Submitted');
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await AuthService.update(email, password,age,gender,marital_status,have_kids,cats_or_dogs,
+  social_media_usage,health_conscious,optimist_realist_pessimist,personality_type,hobbies,profession,income_level,political_viewpoint,
+  economical_viewpoint,genre_of_music,genre_of_movies,latitude,longitude,friends).then(
+        () => {
+          navigate("/friends_list");
+          window.location.reload();
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+    } catch (err) {
+      console.log(err);
+    }
   };
   const genders = [
     {
@@ -710,4 +751,4 @@ const [currentQuestion, setCurrentQuestion] = useState(0);
   );
 };
 
-export default Home;
+export default Home

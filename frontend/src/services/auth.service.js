@@ -27,6 +27,21 @@ const login = (email, password) => {
     });
 };
 
+const update = (email, password,age,gender,marital_status,have_kids,cats_or_dogs,
+  social_media_usage,health_conscious,optimist_realist_pessimist,personality_type,hobbies,profession,income_level,political_viewpoint,
+  economical_viewpoint,genre_of_music,genre_of_movies,latitude,longitude,friends) => {
+  return axios
+    .put(API_URL + "/update", {
+      email, password,age,gender,marital_status,have_kids,cats_or_dogs,
+  social_media_usage,health_conscious,optimist_realist_pessimist,personality_type,hobbies,profession,income_level,political_viewpoint,
+  economical_viewpoint,genre_of_music,genre_of_movies,latitude,longitude,friends
+    })
+    .then((response) => {
+        localStorage.setItem("user", JSON.stringify(response.data));
+      return response.data;
+    });
+};
+
 const logout = () => {
   localStorage.removeItem("user");
 };
@@ -39,6 +54,7 @@ const authService = {
   signup,
   login,
   logout,
+  update,
   getCurrentUser,
 };
 
