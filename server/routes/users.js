@@ -1,6 +1,8 @@
 const router = require('express').Router();
 let User = require('../models/user');
-let friends=require('../compareUsers/findFriendsFunctions');
+let Weights = require('../models/weights');
+let friends = require('../compareUsers/findFriendsFunctions');
+const { query } = require('express');
 
 router.route('/userData').post((req, res) => {
 	email = req.body.email;
@@ -34,14 +36,15 @@ router.route('/signup').post((req, res) => {
 				age,
 				gender
 			});
+			
 			newUser.save()
 				.then(() => res.status(201).json('User added!'))
 				.catch(err => res.status(400).json('Error: ' + err));
+			
 		} else {
 			res.status(400).json("User already registered")
 		}
 	})
-
 });
 
 router.route('/login').post((req, res) => {
@@ -61,25 +64,32 @@ router.route('/login').post((req, res) => {
 		}
 	});
 
+
 })
 router.route('/update').put((req, res) => {
-	const {
-		email,
-		password
-	} = req.body;
+	const user=req.body;
+	const email=req.email;
+	const password=req.password;
 	const filter = {
 		email: email,
 		password: password
 	};
-	const update = req.body;
-
-	User.findOneAndUpdate(filter, update, function (err) {
+	var update = req.body;
+	console.log(update);
+	User.findOneAndUpdate(filter, update, function (err,user) {
 		if (err) {
 			res.status(400).json("Bad Credentials")
 		} else {
+			console.log(user);
 			res.status(200).json("Data Updated");
 		}
 	});
+
+	// if(user['friends'].length){
+	// 	let weights=friends.updateWeights(user);
+	// 	update=weights;
+	// 	console.log(update);
+	// }
 
 
 });
@@ -91,38 +101,51 @@ router.route('/findFriends').post(async (req, res) => {
 		email: email
 	};
 
-	User.findOne(filter, function (err, curr_user) {
+	User.findOne(filter, async function (err, currUser) {
 		if (err) {
 			res.status(400).json("Bad Credentials");
 		}
+		if (!currUser) {
+			res.status(400).json("User does not exists");
+		} else {
+			query = User.find({
+				email: {
+					$ne: email
+				}
+			})
+			const usersList = await query.exec();
+			query=Weights.find({
+				email:email
+			});
+			const weightsCurr=await query.exec();
+			let potentialFriends = friends.findFriends(currUser, usersList,weightsCurr);
+
+			res.status(200).json(potentialFriends);
+		}
 	});
 
-	var query = User.findOne(filter);
-	const currUser = await query.exec();
 
-	query = User.find({
-		email: {
-			$ne: email
-		}
-	})
-	const usersList = await query.exec();
-
-	let potentialFriends = friends.findFriends(currUser, usersList);
-
-	res.status(200).json(potentialFriends);
 
 
 });
 
 
-router.post('/list',(req, res) => {
+router.post('/list', (req, res) => {
 	User.find({}, function (err, curr_user) {
 		if (err) {
 			res.status(400).json("Bad Credentials");
-		}else
+		} else
 			res.status(200).json(curr_user);
 	});
 
+
+});
+
+router.route('/updateWeights').post(async (req, res) => {
+	const email = req.body.email;
+	const filter = {
+		email: email
+	}
 
 });
 
@@ -136,7 +159,7 @@ router.route('/delete').delete(async (req, res) => {
 	User.deleteOne(filter, function (err) {
 		if (err) {
 			res.status(400).json("Bad Credentials");
-		}else{
+		} else {
 			res.status(200).send("Deleted");
 
 		}

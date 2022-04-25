@@ -47,10 +47,10 @@ function findFriends(currUser, usersList) {
 		console.log(score);
 
 	});
-
 	potentialFriends.sort(function (a, b) {
-		return a.value>b.value;
+		return  b.value-a.value;
 	});
+
 	return potentialFriends;
 
 }
@@ -96,7 +96,6 @@ function updateWeights(user){
 		weightArray.push([key,value]);
 	  }
 	console.log(weightArray);
-	
 }
 function personalityComparator(currPersonality, userPersonality) {
 
