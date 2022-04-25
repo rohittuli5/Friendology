@@ -128,7 +128,7 @@ router.route('/findFriends').post(async (req, res) => {
 					weightsCurr=friends.updateWeights(currUser,usersList,weightsCurr);
 				}
 				let potentialFriends = friends.findFriends(currUser, usersList,weightsCurr);
-				res.status(200).json(potentialFriends);
+				res.status(200).json({potentialFriends,weightsCurr});
 			});
 			// const weightsCurr=await query.exec();
 

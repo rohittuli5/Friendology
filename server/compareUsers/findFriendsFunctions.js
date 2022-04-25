@@ -76,6 +76,7 @@ function updateWeights(currUser,usersList,weightsCurr){
 	let count=0;
 	userFriends.forEach(email=>{
 		if(emailExists.has(email)){
+			console.log(currUser['email'],email);
 			count+=1;
 			let user=emailExists.get(email);
 			let listStrings = ['gender', 'marital_status', 'cats_or_dogs', 'profession'];
@@ -123,7 +124,6 @@ function updateWeights(currUser,usersList,weightsCurr){
 	})
 	scoreMap = new Map([...scoreMap.entries()].sort((a, b) => b[1] - a[1]));
 
-	console.log(scoreMap.keys);
 	console.log(scoreMap);
 	var temp=[]
 
