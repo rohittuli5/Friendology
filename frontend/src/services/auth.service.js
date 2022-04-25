@@ -10,6 +10,8 @@ const signup = (first,last,email, password) => {
     })
     .then((response) => {
               localStorage.setItem("user", JSON.stringify(response.data));
+                              localStorage.setItem("email", email);
+
 
       // return response.data;
     });
@@ -23,6 +25,8 @@ const login = (email, password) => {
     })
     .then((response) => {
         localStorage.setItem("user", JSON.stringify(response.data));
+                localStorage.setItem("email", email);
+
       return response.data;
     });
 };
@@ -50,12 +54,25 @@ const getCurrentUser = () => {
   return JSON.parse(localStorage.getItem("user"));
 };
 
+const getFriends = (email) => {
+  return axios
+    .post(API_URL + "/findfriends", {
+      email,
+    })
+    .then((response) => {
+      // console.log("hello",response.data)
+      return JSON.stringify(response.data);
+    });
+};
+
+
 const authService = {
   signup,
   login,
   logout,
   update,
   getCurrentUser,
+  getFriends
 };
 
 export default authService;

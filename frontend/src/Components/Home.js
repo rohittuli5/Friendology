@@ -67,7 +67,7 @@ const Home = () => {
   social_media_usage,health_conscious,optimist_realist_pessimist,personality_type,hobbies,profession,income_level,political_viewpoint,
   economical_viewpoint,genre_of_music,genre_of_movies,latitude,longitude,friends).then(
         () => {
-          navigate("/friends_list");
+          navigate("/friends");
           window.location.reload();
         },
         (error) => {

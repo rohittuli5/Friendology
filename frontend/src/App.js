@@ -9,7 +9,7 @@ import Login from "./Components/Login";
 import Signup from "./Components/Signup";
 import Home from "./Components/Home";
 import 'bootstrap/dist/css/bootstrap.min.css'
-
+import Friends from "./Components/Friends"
 function App() {
   const [currentUser, setCurrentUser] = useState(undefined);
 
@@ -33,7 +33,7 @@ function App() {
           {currentUser &&(
           <li className="nav-item">
             <Link to={"/home"} className="nav-link">
-              Home
+              Update Profile
             </Link>
           </li>
           ) }
@@ -78,6 +78,7 @@ function App() {
           {/* <Route path="/private" element={<Private />} /> */}
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/friends" element={<Friends />} />
         </Routes>
       </div>
     </div>
