@@ -1,12 +1,18 @@
-import React, { useState } from "react";
+import * as React from 'react';
+
+import { useState } from "react";
 import AuthService from "../services/auth.service";
 import { useNavigate } from "react-router-dom";
-
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormControl from '@mui/material/FormControl';
+import FormLabel from '@mui/material/FormLabel';
 const Signup = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [age, setFirst] = useState("");
-  const [gender, setLast] = useState("");
+  const [gender, setLast] = useState("")
 
   const navigate = useNavigate();
 
@@ -55,10 +61,10 @@ const Signup = () => {
         </div>
         <div className="mb-3">
           <label>Gender</label>
-          <input type="text" className="form-control" placeholder="Gender" 
-          value={gender}
-          onChange={(e) => setLast(e.target.value)}
-          />
+          <select value={gender} className="form-control" placeholder="Gender" onChange={(e)=>setLast(e.target.value)}>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+          </select>
         </div>
         
         <div className="mb-3">

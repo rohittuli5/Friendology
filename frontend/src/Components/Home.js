@@ -22,18 +22,18 @@ const Home = () => {
   	const [email, setemail] = useState(0);
     const [password,setpassword]=useState(0);
     const [age,setAge]=useState(0);
-    const [gender,setGender]=useState("Male");
-    const [maritalstatus,setStatus]=useState("Single");
+    const [gender,setGender]=useState("m");
+    const [marital_status,setStatus]=useState("Single");
     const [have_kids,setKids]=useState(0);
     const [cats_or_dogs,setCat]=useState("Dogs");
-    const [social_media_usage,setMedia]=useState(null);
-    const [health_conscious,setHealth]=useState(null);
-    const [optimist_realist_pessimist,setORP]=useState(null);
+    const [social_media_usage,setMedia]=useState(0);
+    const [health_conscious,setHealth]=useState(0);
+    const [optimist_realist_pessimist,setORP]=useState(0);
     const [personality_type,setPersonality]=useState("INTJ");
-    const [profession,setProfession]=useState(null);
-    const [income_level,setIncome]=useState(null);
-    const [political_viewpoint,setPolitical]=useState(null);
-    const [economical_viewpoint,setEconomical]=useState(null);
+    const [profession,setProfession]=useState("Engineer");
+    const [income_level,setIncome]=useState(0);
+    const [political_viewpoint,setPolitical]=useState(0);
+    const [economical_viewpoint,setEconomical]=useState(0);
     const [hobbies,setHobbies]=useState({
       reading:false,
       travelling:false,
@@ -109,7 +109,7 @@ const Home = () => {
   useEffect(() => {
     const user = AuthService.getCurrentUser();
     if (user) {
-
+      console.log(user)
       setCurrentUser(user);
       setemail(user['email'])
       setpassword(user['password'])
@@ -122,29 +122,59 @@ const Home = () => {
       setHealth(user['health_conscious'])
       setORP(user['optimist_realist_pessimist'])
       setPersonality(user['personality_type'])
-      setHobbies(user['hobbies'])
+      
       setProfession(user['profession'])
       setIncome(user['income_level'])
       setPolitical(user['political_viewpoint'])
       setEconomical(user['economical_viewpoint'])
-      setMusic(user['genre_of_music'])
-      setMovies(user['genre_of_movies'])
       setLatitude(user['latitude'])
       setLongitude(user['longitude'])
       setFriends(['a@gmail.com,b@gmail.com,c@gmail.com'])
-      
+      let hobbies_list=user['hobbies'];
+      let movie_genre_list=user['genre_of_movies'];
+      let music_genre_list=user['genre_of_music'];
+      for(let i=0;i<hobbies_list.length;i++){
+        hobbies[hobbies_list[i]]=true
+      }
+      for(let i=0;i<movie_genre_list.length;i++){
+        genre_of_movies[movie_genre_list[i]]=true
+      }
+      for(let i=0;i<music_genre_list.length;i++){
+        genre_of_music[music_genre_list[i]]=true
+      }
     }
   }, []);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
+    const hobbyList=[]
+    const movieGenreList=[]
+    const musicGenreList=[]
+    for (const [key, value] of Object.entries(hobbies)){
+      if(value==true){
+        hobbyList.push(key)
+      }
+    }
+    for (const [key, value] of Object.entries(genre_of_movies)){
+      if(value==true){
+        movieGenreList.push(key)
+      }
+    }
+    for (const [key, value] of Object.entries(genre_of_music)){
+      if(value==true){
+        musicGenreList.push(key)
+      }
+    }
+
     e.preventDefault();
     try {
+      
+
       await AuthService.update(email, password,age,gender,marital_status,have_kids,cats_or_dogs,
-  social_media_usage,health_conscious,optimist_realist_pessimist,personality_type,hobbies,profession,income_level,political_viewpoint,
-  economical_viewpoint,genre_of_music,genre_of_movies,latitude,longitude,friends).then(
+  social_media_usage,health_conscious,optimist_realist_pessimist,personality_type,hobbyList,profession,income_level,political_viewpoint,
+  economical_viewpoint,musicGenreList,movieGenreList,latitude,longitude,friends).then(
         () => {
-          navigate("/friends_list");
+          navigate("/friends");
           window.location.reload();
         },
         (error) => {
@@ -157,6 +187,10 @@ const Home = () => {
   };
   const genders = [
     {
+      value:"default",
+      label:"Not Selected"
+    },
+    {
       value: 'Male',
       label: 'Male',
     },
@@ -167,10 +201,14 @@ const Home = () => {
     
   ];
 
-  const marital_status = [
+  const marital_status_options = [
     {
       value: 'Married',
       label: 'Married',
+    },
+    {
+      value:"default",
+      label:"Not Selected"
     },
     {
       value: 'Single',
@@ -188,6 +226,10 @@ const Home = () => {
       label: 'Cats',
     },
     {
+      value:"default",
+      label:"Not Selected"
+    },
+    {
       value: 'Dogs',
       label: 'Dogs',
     },
@@ -201,6 +243,10 @@ const Home = () => {
     {
       value: 'Student (Science)',
       label: 'Student (Science)',
+    },
+    {
+      value:"default",
+      label:"Not Selected"
     },
     {
       value: 'Student (Commerce)',
@@ -277,6 +323,10 @@ const Home = () => {
     {
       value: "INTJ",
       label: "INTJ",
+    },
+    {
+      value:"default",
+      label:"Not Selected"
     },
     {
       value: "ISTJ",
@@ -371,8 +421,8 @@ const Home = () => {
         </Grid>
         
         <Grid item xs={4}>
-        <TextField id="maritalstatus" style={{width:"75%"}} select variant="outlined" label="Marital Status" value={maritalstatus} onChange={(e)=>setStatus(e.target.value)}>
-        {marital_status.map((option) => (
+        <TextField id="maritalstatus" style={{width:"75%"}} select variant="outlined" label="Marital Status" value={marital_status} onChange={(e)=>setStatus(e.target.value)}>
+        {marital_status_options.map((option) => (
           <MenuItem key={option.value} value={option.value}>
             {option.label}
           </MenuItem>
