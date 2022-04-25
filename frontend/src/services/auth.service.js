@@ -13,7 +13,7 @@ const signup = (first,last,email, password) => {
                               localStorage.setItem("email", email);
 
 
-      // return response.data;
+      return response.data;
     });
 };
 

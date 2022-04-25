@@ -1,4 +1,4 @@
-function findFriends(currUser, usersList) {
+function findFriends(currUser, usersList,weightsCurr) {
 
 	var potentialFriends = [];
 	var friendsofCurr=currUser['friends'];
@@ -12,23 +12,23 @@ function findFriends(currUser, usersList) {
 		let listStrings = ['gender', 'marital_status', 'cats_or_dogs', 'profession'];
 
 		listStrings.forEach(element => {
-			score += ifSameString(currUser[element], user[element]);
+			score += weightsCurr[element]*ifSameString(currUser[element], user[element]);
 		});
 
 		let listNumeric = ['social_media_usage', 'have_kids', 'health_conscious', 'optimist_realist_pessimist', 'political_viewpoint', 'economical_viewpoint'];
 
 
 		listNumeric.forEach(element => {
-			score += distance(currUser[element], user[element]);
+			score += weightsCurr[element]*distance(currUser[element], user[element]);
 		});
 
 
-		score += personalityComparator(currUser.personality_type, user.personality_type);
+		score +=weightsCurr['personality_type']* personalityComparator(currUser.personality_type, user.personality_type);
 
-		score += ageGap(currUser.age, user.age);
+		score += weightsCurr['age']*ageGap(currUser.age, user.age);
 
-		score += music_and_movies(currUser.genre_of_music, user.genre_of_music);
-		score += music_and_movies(currUser.genre_of_movies, user.genre_of_movies);
+		score += weightsCurr['genre_of_music']*music_and_movies(currUser.genre_of_music, user.genre_of_music);
+		score += weightsCurr['genre_of_movies']*music_and_movies(currUser.genre_of_movies, user.genre_of_movies);
 
 		let friendsofUser = user['friends'];
 		if (hashSet.has(user['email'])) {
@@ -58,55 +58,94 @@ function updateWeights(currUser,usersList,weightsCurr){
 	if(!currUser){
 		return 0;
 	}
-	var hashMap=new Map();
+	var scoreMap=new Map();
 	var userFriends=currUser['friends'];
 	var emailExists=new Map();
 	usersList.forEach(element=>{
 		emailExists.set(element['email'],element);
 	})
-	console.log(currUser.keys());
-	for (const key in currUser){
-		if(key!='email' && key!='password' && key!='friends'){
-			hashMap.set(key,0);
-		}
-	}
+	const listofKeys=['age','gender',"marital_status","have_kids","cats_or_dogs","social_media_usage",
+	"health_conscious","optimist_realist_pessimist","personality_type","hobbies",
+	"profession","income_level","political_viewpoint","economical_viewpoint",
+	"latitude","longitude","genre_of_music","genre_of_movies"]
 
+	listofKeys.forEach(element=>{
+		scoreMap.set(element,0);
+		// console.log(element,scoreMap.get(element));
+	});
+	let count=0;
 	userFriends.forEach(email=>{
 		if(emailExists.has(email)){
-			let user=emailExists[email];
+			count+=1;
+			let user=emailExists.get(email);
 			let listStrings = ['gender', 'marital_status', 'cats_or_dogs', 'profession'];
 			
 			listStrings.forEach(element => {
-				hashMap[element]+=ifSameString(currUser[element], user[element]);
+				//console.log(element,scoreMap[element]);
+				let val=scoreMap.get(element)
+				val+=ifSameString(currUser[element], user[element]);
+				scoreMap.set(element,val);
 			});
 			
 			let listNumeric = ['social_media_usage', 'have_kids', 'health_conscious', 'optimist_realist_pessimist', 'political_viewpoint', 'economical_viewpoint'];
 			
 			
 			listNumeric.forEach(element => {
-				hashMap[element]+= distance(currUser[element], user[element]);
+				let val=scoreMap.get(element)
+				val+=ifSameString(currUser[element], user[element]);
+				scoreMap.set(element,val);
 			});
 			
+			let val;
+			val=scoreMap.get('personality_type')
+			val+= personalityComparator(currUser.personality_type, user.personality_type);
+			scoreMap.set('personality_type',val);
 			
-			hashMap['personality_type']+= personalityComparator(currUser.personality_type, user.personality_type);
-			
-			hashMap['age']+= ageGap(currUser.age, user.age);
-			
-			hashMap['music'] += music_and_movies(currUser.genre_of_music, user.genre_of_music);
-			hashMap['movies'] += music_and_movies(currUser.genre_of_movies, user.genre_of_movies);
+			val=scoreMap.get('age')
+			val+= ageGap(currUser.age, user.age);
+			scoreMap.set('age',val);	
+
+			val=scoreMap.get('genre_of_music')
+			val+= music_and_movies(currUser.genre_of_music, user.genre_of_music);
+			scoreMap.set('genre_of_music',val);					
+
+			val=scoreMap.get('genre_of_movies')
+			val+= music_and_movies(currUser.genre_of_movies, user.genre_of_movies);
+			scoreMap.set('genre_of_movies',val);					
 		}
 			
 	});
-	var l=userFriends.length;
-	for (const [key, value] of Object.entries(hashMap)) {
-		hashMap[key]/=l;
-	  }
-	let start=hashMap.keys();
-	console.log(start);
-	for (const [key, value] of Object.entries(hashMap)) {
-		weightsCurr[key]=value;
-	  }
-	console.log(weightsCurr);
+	count=Math.max(count,1);
+	listofKeys.forEach(key=>{
+		console.log(key)
+		let val=scoreMap.get(key);
+		scoreMap.set(key,val/count);
+	})
+	scoreMap = new Map([...scoreMap.entries()].sort((a, b) => b[1] - a[1]));
+
+	console.log(scoreMap.keys);
+	console.log(scoreMap);
+	var temp=[]
+
+
+	listofKeys.forEach(key=>{
+		temp.push({
+			key: key,
+			value: 	scoreMap.get(key),
+
+			});
+		}
+	)
+	temp.sort(function (a, b) {
+		return  b.value-a.value;
+		});
+	let start=temp.length;
+
+	temp.forEach(element=>{
+		weightsCurr[element.key]=start;
+		start--;
+	});
+	return weightsCurr;
 }
 function personalityComparator(currPersonality, userPersonality) {
 
@@ -198,3 +237,62 @@ module.exports = {
 	ageGap,
 	updateWeights
 }
+
+/*
+function findFriends(currUser, usersList) {
+
+	var potentialFriends = [];
+	var friendsofCurr=currUser['friends'];
+	var hashSet = new Set();
+	friendsofCurr.forEach(friend => {
+		hashSet.add(friend);
+	})
+
+	usersList.forEach(user => {
+		let score = 0;
+		let listStrings = ['gender', 'marital_status', 'cats_or_dogs', 'profession'];
+
+		listStrings.forEach(element => {
+			score += ifSameString(currUser[element], user[element]);
+		});
+
+		let listNumeric = ['social_media_usage', 'have_kids', 'health_conscious', 'optimist_realist_pessimist', 'political_viewpoint', 'economical_viewpoint'];
+
+
+		listNumeric.forEach(element => {
+			score += distance(currUser[element], user[element]);
+		});
+
+
+		score += personalityComparator(currUser.personality_type, user.personality_type);
+
+		score += ageGap(currUser.age, user.age);
+
+		score += music_and_movies(currUser.genre_of_music, user.genre_of_music);
+		score += music_and_movies(currUser.genre_of_movies, user.genre_of_movies);
+
+		let friendsofUser = user['friends'];
+		if (hashSet.has(user['email'])) {
+		}
+		else{
+			friendsofUser.forEach(friend => {
+				if (hashSet.has(friend)) {
+					score += 2;
+				}
+			})
+			potentialFriends.push({
+				key: user,
+				value: score
+			});
+		}
+
+	});
+	potentialFriends.sort(function (a, b) {
+		return  b.value-a.value;
+	});
+
+	return potentialFriends;
+
+}
+
+*/ 
