@@ -114,11 +114,11 @@ router.route('/findFriends').post(async (req, res) => {
 				}
 			})
 			const usersList = await query.exec();
-			query=Weights.find({
-				email:email
-			});
-			const weightsCurr=await query.exec();
-			let potentialFriends = friends.findFriends(currUser, usersList,weightsCurr);
+			// query=Weights.find({
+			// 	email:email
+			// });
+			// const weightsCurr=await query.exec();
+			let potentialFriends = friends.findFriends(currUser, usersList);
 
 			res.status(200).json(potentialFriends);
 		}
