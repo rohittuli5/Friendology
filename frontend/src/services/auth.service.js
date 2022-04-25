@@ -38,6 +38,7 @@ const update = (email, password,age,gender,marital_status,have_kids,cats_or_dogs
     })
     .then((response) => {
         localStorage.setItem("user", JSON.stringify(response.data));
+        console.log(response)
       return response.data;
     });
 };
