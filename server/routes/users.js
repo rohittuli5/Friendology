@@ -108,7 +108,7 @@ router.route('/findFriends').post(async (req, res) => {
 		if (!currUser) {
 			res.status(400).json("User does not exists");
 		} else {
-			query = User.find({
+			let query = User.find({
 				email: {
 					$ne: email
 				}
