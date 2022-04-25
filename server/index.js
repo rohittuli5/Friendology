@@ -18,7 +18,7 @@ connection.once('open', () => {
     console.log("MongoDB database connection established successfully");
 })
 // Have Node serve the files for our built React app
-app.use(express.static(path.resolve(__dirname, '../frontend/build')));
+//app.use(express.static(path.resolve(__dirname, '../frontend/build')));
 
 // Handle GET requests to /api route
 app.get("/api", (req, res) => {
@@ -26,9 +26,9 @@ app.get("/api", (req, res) => {
 });
 
 // All other GET requests not handled before will return our React app
-app.get('*', (req, res) => {
-  res.sendFile(path.resolve(__dirname, '../frontend/build', 'index.html'));
-});
+// app.get('*', (req, res) => {
+//   res.sendFile(path.resolve(__dirname, '../frontend/build', 'index.html'));
+// });
 
 const usersRouter = require('./routes/users');
 app.use('/users', usersRouter);
