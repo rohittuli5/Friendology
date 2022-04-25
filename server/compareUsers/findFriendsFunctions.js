@@ -132,7 +132,6 @@ function updateWeights(currUser,usersList,weightsCurr){
 		temp.push({
 			key: key,
 			value: 	scoreMap.get(key),
-
 			});
 		}
 	)
@@ -142,9 +141,13 @@ function updateWeights(currUser,usersList,weightsCurr){
 	let start=temp.length;
 
 	temp.forEach(element=>{
-		weightsCurr[element.key]=start;
-		start--;
+		if(element.value!==0){
+			weightsCurr[element.key]=start;
+			start--;
+		}
+		
 	});
+	console.log(weightsCurr);
 	return weightsCurr;
 }
 function personalityComparator(currPersonality, userPersonality) {
@@ -175,7 +178,7 @@ function personalityComparator(currPersonality, userPersonality) {
 	similarPersonality.set("ESTJ", 1);
 
 
-	if (similarPersonality[userPersonality] == similarPersonality[currPersonality]) {
+	if (similarPersonality.get(userPersonality) == similarPersonality.get(currPersonality)) {
 		return 10;
 	}
 	return 0;

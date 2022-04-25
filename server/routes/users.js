@@ -50,7 +50,6 @@ router.route('/signup').post((req, res) => {
 router.route('/login').post((req, res) => {
 	const email = req.body.email;
 	const password = req.body.password;
-	console.log(email, password);
 	User.findOne({
 		email: email,
 		password: password
