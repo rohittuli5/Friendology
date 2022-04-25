@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AuthService from "../services/auth.service";
-
+import '../index.css'
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -26,28 +26,15 @@ const Login = () => {
   };
 
   return (
-    <div>
+    <div className="auth-inner">
       <form onSubmit={handleLogin}>
         <h3>Login</h3>
-        {/* <input
-          type="text"
-          placeholder="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <input
-          type="password"
-          placeholder="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        /> */}
         <div className="mb-3">
           <label>Email address</label>
           <input
             type="email"
             value={email}
                       onChange={(e) => setEmail(e.target.value)}
-
             className="form-control"
             placeholder="Enter email"
           />
@@ -67,9 +54,9 @@ const Login = () => {
             Submit
           </button>
         </div>
-        
+
       </form>
-    </div>
+      </div>
   );
 };
 

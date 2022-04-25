@@ -36,7 +36,7 @@ const Signup = () => {
   };
 
   return (
-    <div>
+    <div className='auth-inner'>
       <form onSubmit={handleSignup}>
         <h3>Sign up</h3>
         <div className="mb-3">
@@ -84,7 +84,7 @@ const Signup = () => {
           </button>
         </div>
       </form>
-    </div>
+      </div>
   );
 };
 
