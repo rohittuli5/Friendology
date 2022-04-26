@@ -8,14 +8,15 @@ import {ListGroup,ListGroupItem,Row,Col,Tab} from 'react-bootstrap'
 import Badge from 'react-bootstrap/Badge'
 import Button from 'react-bootstrap/Button'
 import axios from "axios";
+import Table from 'react-bootstrap/Table'
 // import ListGroup from 'react-bootstrap/ListGroup'
 const Friends = () => {
   const [friends,setFriends]=useState("")
   const [friendsvalue,setValue]=useState("")
-
+  const [user,setCurrentUser]=useState(null)
   const navigate = useNavigate();
-  // setCurrentUser(localStorage.getItem("user"))
   useEffect(() => {
+    setCurrentUser(localStorage.getItem("user"))
     const email = localStorage.getItem("email")
    
     AuthService.getFriends(email).then(
@@ -58,8 +59,7 @@ const Friends = () => {
     }
     const listfriends=[]
     const infofriends=[]
-
-
+    const userfriends=[]
     for (var i in friends)
     {
       // listfriends.push(<ListGroup.Item>{friends[i]}</ListGroup.Item>)
@@ -178,6 +178,23 @@ const Friends = () => {
         </Tab.Pane>)
     })
     
+    
+    var j=1
+    for(var i in JSON.parse(localStorage.getItem("user")).friends)
+    {
+      // console.log("hello",i)
+      userfriends.push(<tr>
+      <td>{j}</td>
+      <td>{JSON.parse(localStorage.getItem("user")).friends[i]}</td>
+    </tr>)
+
+j=j+1
+      }
+
+
+
+
+
 
 
 
@@ -202,6 +219,20 @@ const Friends = () => {
     </Col>
   </Row>
 </Tab.Container>
+      <hr style={{color:'#ffffff'}}/>
+            <h1 style={{color:'#ffffff', textAlign:'center'}}>Friends List</h1>
+      <Table bordered style={{color:'#ffffff',textAlign:'center'}}>
+
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Email ID</th>
+    </tr>
+  </thead>
+  <tbody>
+    {userfriends}
+  </tbody>
+</Table>
     </div>
   );
 };

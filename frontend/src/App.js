@@ -31,6 +31,7 @@ function App() {
       <div >
       <nav className="navbar navbar-expand navbar-dark bg-dark">
         <div className="navbar-nav mr-auto">
+
           {currentUser &&(
           <li className="nav-item">
             <Link to={"/home"} className="nav-link">
@@ -38,15 +39,17 @@ function App() {
             </Link>
           </li>
           ) }
-
-          {/* {currentUser && (
-            <li className="nav-item">
-              <Link to={"/private"} className="nav-link">
-                Private
-              </Link>
-            </li>
-          )} */}
         </div>
+        <div className="navbar-nav ms-auto ">
+          
+          {currentUser && (
+            <li className="nav-item">
+              <span  className="nav-link mx-auto " style={{color:'white'}} >
+                {currentUser.email}
+              </span>
+            </li>
+          )}
+          </div>
 
         {currentUser ? (
           <div className="navbar-nav ms-auto">
