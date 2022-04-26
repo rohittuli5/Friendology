@@ -47,7 +47,7 @@ const Friends = () => {
       let user=AuthService.getCurrentUser()
       user.friends.push(friend);
       console.log(user)
-      localStorage.setItem("user",user);
+      localStorage.setItem("user",JSON.stringify(user));
       axios.post("users/addFriends", user).then((response)=>{
         console.log(response);
         window.location.reload();
