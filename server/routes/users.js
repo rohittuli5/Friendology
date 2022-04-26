@@ -73,7 +73,9 @@ router.route('/login').post((req, res) => {
 			res.status(400).json("Bad Credentials")
 		} else {
 			if (foundUsers) {
-				res.status(200).json(foundUsers)
+				res.status(200).json(foundUsers);
+			}else{
+				res.status(400).json("User does not exist");
 			}
 		}
 	});
@@ -220,19 +222,14 @@ router.post('/list', (req, res) => {
 
 });
 
-router.route('/updateWeights').post(async (req, res) => {
-	const email = req.body.email;
-	const filter = {
-		email: email
-	}
 
-});
 
 router.route('/delete').delete(async (req, res) => {
 	const email = req.body.email;
-
+	const password=req.body.password;
 	const filter = {
-		email: email
+		email: email,
+		password:password
 	};
 
 	User.deleteOne(filter, function (err) {
