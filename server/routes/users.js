@@ -66,7 +66,7 @@ router.route('/login').post((req, res) => {
 
 })
 
-router.route('/update').put(async (req, res) => {
+router.route('/update').put((req, res) => {
 	const email=req.body.email;
 	const password=req.body.password;
 	const filter = {
@@ -74,11 +74,15 @@ router.route('/update').put(async (req, res) => {
 		password: password
 	};
 	var update = req.body;
-	User.updateOne(filter, update,{new:true}, function (err,user) {
+	User.findOneAndUpdate(filter, update,{new:true},function (err,user) {
 		if (err) {
-			res.status(400).json("Bad Credentials")
+			res.status(400).json("Error: "+err);
 		} else {
-			res.status(200).json("Data Updated");
+			if(!user){
+				res.status(400).json("Email or Password is incorrect");
+			}else{
+				res.status(200).json(user);
+			}
 		}
 	});
 

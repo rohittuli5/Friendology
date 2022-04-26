@@ -93,7 +93,9 @@ function updateWeights(currUser,usersList,weightsCurr){
 			
 			listNumeric.forEach(element => {
 				let val=scoreMap.get(element)
-				val+=ifSameString(currUser[element], user[element]);
+				val+=distance(currUser[element], user[element]);
+				
+				console.log(element,user['email'],user[element],val);
 				scoreMap.set(element,val);
 			});
 			
@@ -118,12 +120,12 @@ function updateWeights(currUser,usersList,weightsCurr){
 	});
 	count=Math.max(count,1);
 	listofKeys.forEach(key=>{
-		console.log(key)
 		let val=scoreMap.get(key);
 		scoreMap.set(key,val/count);
 	})
 	scoreMap = new Map([...scoreMap.entries()].sort((a, b) => b[1] - a[1]));
 
+	// console.log(scoreMap.keys);
 	console.log(scoreMap);
 	var temp=[]
 
@@ -206,7 +208,7 @@ function music_and_movies(currMusic, userMusic) {
 	var count = 0;
 	for (let music of currMusic) {
 		if (set.has(music)) {
-			count += 2;
+			count += 4;
 		}
 	}
 	return Math.min(count, 5);
@@ -225,7 +227,8 @@ function ifSameString(quality1, quality2) {
 }
 
 function distance(currScore, userScore) {
-	if (currScore == -1 || userScore === -1) {
+	console.log(currScore,userScore);
+	if (currScore == -1 || userScore == -1) {
 		return 0;
 	}
 	return 5 - Math.abs(currScore - userScore);
