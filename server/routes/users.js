@@ -6,6 +6,13 @@ const {
 	query
 } = require('express');
 
+/*
+POST rest API call for user data
+
+Returns:
+	User data of the current user;
+	In case of error will return the error;
+*/
 router.route('/userData').post((req, res) => {
 	email = req.body.email;
 	User.findOne({
@@ -21,6 +28,12 @@ router.route('/userData').post((req, res) => {
 	});
 
 });
+
+/*
+POST rest API call for signup
+Adds the user to the mongo db database
+*/
+
 
 router.route('/signup').post((req, res) => {
 	const email = req.body.email;
@@ -40,7 +53,7 @@ router.route('/signup').post((req, res) => {
 			});
 
 			newUser.save()
-				.then(() => res.status(201).json('User added!'))
+				.then(() => res.status(201).json(newUser))
 				.catch(err => res.status(400).json('Error: ' + err));
 
 		} else {
