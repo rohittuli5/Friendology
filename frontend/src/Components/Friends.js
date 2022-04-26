@@ -146,11 +146,11 @@ const Friends = () => {
     <ListGroupItem>
     <div className="row">
         <div className="col">
-        <span>Politics: {friend.political_viewpoint} </span>
+        <span>Political Viewpoint: {friend.political_viewpoint} </span>
         </div>
         <div className="col">
         <span>
-        Economics: {friend.economical_viewpoint} 
+        Economical Viewpoint: {friend.economical_viewpoint} 
         </span>
         </div>
       </div>

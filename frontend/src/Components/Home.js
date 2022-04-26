@@ -492,7 +492,7 @@ const Home = () => {
           </MenuItem>
         ))}
         </TextField>
-        <a className="container ms-auto" herf="https://www.16personalities.com/free-personality-test">https://www.16personalities.com/free-personality-test</a>
+        <a className="container ms-auto" href="https://www.16personalities.com/free-personality-test">Take the test here.</a>
         </Grid>
         <Grid item xs={12}>
         <Typography variant="h5" component="h5">Section 2: Rate yourself on 1-5 scale</Typography>
