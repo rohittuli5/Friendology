@@ -2,7 +2,9 @@ const router = require('express').Router();
 let User = require('../models/user');
 let Weights = require('../models/weights');
 let friends = require('../compareUsers/findFriendsFunctions');
-const { query } = require('express');
+const {
+	query
+} = require('express');
 
 router.route('/userData').post((req, res) => {
 	email = req.body.email;
@@ -36,11 +38,11 @@ router.route('/signup').post((req, res) => {
 				age,
 				gender
 			});
-			
+
 			newUser.save()
 				.then(() => res.status(201).json('User added!'))
 				.catch(err => res.status(400).json('Error: ' + err));
-			
+
 		} else {
 			res.status(400).json("User already registered")
 		}
@@ -67,20 +69,22 @@ router.route('/login').post((req, res) => {
 })
 
 router.route('/update').put((req, res) => {
-	const email=req.body.email;
-	const password=req.body.password;
+	const email = req.body.email;
+	const password = req.body.password;
 	const filter = {
 		email: email,
 		password: password
 	};
 	var update = req.body;
-	User.findOneAndUpdate(filter, update,{new:true},function (err,user) {
+	User.findOneAndUpdate(filter, update, {
+		new: true
+	}, function (err, user) {
 		if (err) {
-			res.status(400).json("Error: "+err);
+			res.status(400).json("Error: " + err);
 		} else {
-			if(!user){
+			if (!user) {
 				res.status(400).json("Email or Password is incorrect");
-			}else{
+			} else {
 				res.status(200).json(user);
 			}
 		}
@@ -115,24 +119,27 @@ router.route('/findFriends').post(async (req, res) => {
 				}
 			})
 			const usersList = await query.exec();
-			query=Weights.findOne({
-				email:email
-			},function (err,doc){
-				if(err){
+			query = Weights.findOne({
+				email: email
+			}, function (err, doc) {
+				if (err) {
 					res.status(400).json('Unable to set weights');
 				}
 				var weightsCurr;
-				if(!doc){
-					weightsCurr=new Weights({
-						email:email
+				if (!doc) {
+					weightsCurr = new Weights({
+						email: email
 					});
 					weightsCurr.save();
-				}else{
-					weightsCurr=doc;
-					weightsCurr=friends.updateWeights(currUser,usersList,weightsCurr);
+				} else {
+					weightsCurr = doc;
+					weightsCurr = friends.updateWeights(currUser, usersList, weightsCurr);
 				}
-				let potentialFriends = friends.findFriends(currUser, usersList,weightsCurr);
-				res.status(200).json({potentialFriends,weightsCurr});
+				let potentialFriends = friends.findFriends(currUser, usersList, weightsCurr);
+				res.status(200).json({
+					potentialFriends,
+					weightsCurr
+				});
 			});
 
 		}
@@ -143,6 +150,51 @@ router.route('/findFriends').post(async (req, res) => {
 
 });
 
+router.post('/addFriends', (req, res) => {
+	const friends = req.body.friends;
+	const email = req.body.email;
+	const password = req.body.password;
+	const filter = {
+		email: email,
+		password: password
+	};
+	User.findOne(filter, function (err, foundUsers) {
+		if (err) {
+			res.status(400).json("Error: " + err)
+		} else {
+			if (foundUsers) {
+				// console.log(foundUsers);
+				var friendsList = new Set();
+				foundUsers.friends.forEach(friend => {
+					friendsList.add(friend);
+				})
+				friends.forEach(friend => {
+					if (!friendsList.has(friend)) {
+						foundUsers.friends.push(friend);
+					}
+				});
+				var update = foundUsers;
+				User.findOneAndUpdate(filter, update, {
+					new: true
+				}, function (err, user) {
+					if (err) {
+						res.status(400).json("Error: " + err);
+					} else {
+						if (!user) {
+							res.status(400).json("Email or Password is incorrect");
+						} else {
+							res.status(200).json(user);
+						}
+					}
+				});
+
+			} else {
+				res.status(400).json("Email or password is incorrect");
+			}
+		}
+	});
+
+});
 
 router.post('/list', (req, res) => {
 	User.find({}, function (err, curr_user) {
