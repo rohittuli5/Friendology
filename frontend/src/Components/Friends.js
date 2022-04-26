@@ -221,6 +221,8 @@ j=j+1
 </Tab.Container>
       <hr style={{color:'#ffffff'}}/>
             <h1 style={{color:'#ffffff', textAlign:'center'}}>Friends List</h1>
+            <div className="container">
+
       <Table bordered style={{color:'#ffffff',textAlign:'center'}}>
 
   <thead>
@@ -233,6 +235,7 @@ j=j+1
     {userfriends}
   </tbody>
 </Table>
+            </div>
     </div>
   );
 };

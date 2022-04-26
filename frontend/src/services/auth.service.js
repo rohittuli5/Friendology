@@ -7,8 +7,8 @@ const signup = (age,gender,email, password) => {
     .post(API_URL + "/signup", {
       email,
       password,
-      // age,
-      // gender
+      age,
+      gender
     })
     .then((response) => {
               localStorage.setItem("user", JSON.stringify(response.data));
