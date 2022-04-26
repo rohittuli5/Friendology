@@ -7,6 +7,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import {ListGroup,ListGroupItem,Row,Col,Tab} from 'react-bootstrap'
 import Badge from 'react-bootstrap/Badge'
 import Button from 'react-bootstrap/Button'
+import axios from "axios";
 // import ListGroup from 'react-bootstrap/ListGroup'
 const Friends = () => {
   const [friends,setFriends]=useState("")
@@ -37,8 +38,27 @@ const Friends = () => {
       }
       );
     }, []);
+
+
+    const addFriend=(friend)=>{
+
+      console.log(friend)
+      let user=AuthService.getCurrentUser()
+      user.friends.push(friend);
+      console.log(user)
+      axios.post("users/addFriends", user).then((response)=>{
+        console.log(response);
+        window.location.reload();
+      })
+      .catch((err)=>{
+        console.log(err);
+      })
+      
+    }
     const listfriends=[]
     const infofriends=[]
+
+
     for (var i in friends)
     {
       // listfriends.push(<ListGroup.Item>{friends[i]}</ListGroup.Item>)
@@ -48,28 +68,28 @@ const Friends = () => {
 
 
 
+    let list_of_friends=[]
+    for(i in friends){
+      list_of_friends.push(friends[i])
+    }
 
-
-
-
-    for (var i in friends)
-    {
-      infofriends.push(<Tab.Pane eventKey={'#'+friends[i].email}>
+    list_of_friends.map((friend)=>{
+      infofriends.push(<Tab.Pane eventKey={'#'+friend.email}>
         <Card style={{ width: '50rem' }}>
   <Card.Body>
-    <Card.Subtitle className="mb-2 text-muted">{friends[i].email}</Card.Subtitle>
+    <Card.Subtitle className="mb-2 text-muted">{friend.email}</Card.Subtitle>
     <Card.Title>
-              <span>Personality Type: <Badge pill bg="success">{friends[i].personality_type}</Badge> </span>
+              <span>Personality Type: <Badge pill bg="success">{friend.personality_type}</Badge> </span>
     </Card.Title>
     <ListGroup className="list-group-flush">
     <ListGroupItem>
       <div className="row">
         <div className="col">
-        <span>Gender: {friends[i].gender} </span>
+        <span>Gender: {friend.gender} </span>
         </div>
         <div className="col">
         <span>
-        Age:</span><span className="label label-primary">{friends[i].age}</span>
+        Age:</span><span className="label label-primary">{friend.age}</span>
 
         </div>
       </div>
@@ -77,11 +97,11 @@ const Friends = () => {
     <ListGroupItem>
       <div className="row">
         <div className="col">
-        <span>Status: {friends[i].marital_status} </span>
+        <span>Status: {friend.marital_status} </span>
         </div>
         <div className="col">
         <span>
-        Kids: {friends[i].have_kids} 
+        Kids: {friend.have_kids} 
         </span>
         </div>
       </div>
@@ -89,11 +109,11 @@ const Friends = () => {
     <ListGroupItem>
     <div className="row">
         <div className="col">
-        <span>Pet: {friends[i].cats_or_dogs} </span>
+        <span>Pet: {friend.cats_or_dogs} </span>
         </div>
         <div className="col">
         <span>
-        Social Media Usage: {friends[i].social_media_usage} 
+        Social Media Usage: {friend.social_media_usage} 
         </span>
         </div>
       </div>
@@ -101,11 +121,11 @@ const Friends = () => {
     <ListGroupItem>
     <div className="row">
         <div className="col">
-        <span>Profession: {friends[i].profession} </span>
+        <span>Profession: {friend.profession} </span>
         </div>
         <div className="col">
         <span>
-        Income Level: {friends[i].income_level} 
+        Income Level: {friend.income_level} 
         </span>
         </div>
       </div>
@@ -113,11 +133,11 @@ const Friends = () => {
     <ListGroupItem>
     <div className="row">
         <div className="col">
-        <span>Health Conscious: {friends[i].health_conscious} </span>
+        <span>Health Conscious: {friend.health_conscious} </span>
         </div>
         <div className="col">
         <span>
-        Optimism Level: {friends[i].optimist_realist_pessimist} 
+        Optimism Level: {friend.optimist_realist_pessimist} 
         </span>
         </div>
       </div>
@@ -125,11 +145,11 @@ const Friends = () => {
     <ListGroupItem>
     <div className="row">
         <div className="col">
-        <span>Politics: {friends[i].political_viewpoint} </span>
+        <span>Politics: {friend.political_viewpoint} </span>
         </div>
         <div className="col">
         <span>
-        Economics: {friends[i].economical_viewpoint} 
+        Economics: {friend.economical_viewpoint} 
         </span>
         </div>
       </div>
@@ -138,30 +158,25 @@ const Friends = () => {
     <div className="row">
         <div className="col">
           <span>Hobbies: </span>
-          {friends[i].hobbies.map((hobbie)=><Badge className="mx-1" pill bg="primary">{hobbie}</Badge>)}
+          {friend.hobbies.map((hobbie)=><Badge className="mx-1" pill bg="primary">{hobbie}</Badge>)}
                   </div>
         <div className="col">
         <span>Movies: </span>
-          {friends[i].genre_of_movies.map((hobbie)=><Badge  className="mx-1" pill bg="warning">{hobbie}</Badge>)}
+          {friend.genre_of_movies.map((hobbie)=><Badge  className="mx-1" pill bg="warning">{hobbie}</Badge>)}
                   </div>
                   <div className="col">
         <span>Music: </span>
-          {friends[i].genre_of_music.map((hobbie)=><Badge className="mx-1" pill bg="info">{hobbie}</Badge>)}
+          {friend.genre_of_music.map((hobbie)=><Badge className="mx-1" pill bg="info">{hobbie}</Badge>)}
                   </div>
       </div>
     </ListGroupItem>
   </ListGroup>
-    {/* <Button href="#">Add Friend</Button> */}
+    <Button onClick={(e)=>addFriend(friend.email)}>Add Friend</Button>
   </Card.Body>
 </Card>
         </Tab.Pane>)
-    }
-
-
-
-
-
-
+    })
+    
 
 
 
