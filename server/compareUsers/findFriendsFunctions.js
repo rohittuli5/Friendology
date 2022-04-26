@@ -125,8 +125,7 @@ function updateWeights(currUser,usersList,weightsCurr){
 	})
 	scoreMap = new Map([...scoreMap.entries()].sort((a, b) => b[1] - a[1]));
 
-	// console.log(scoreMap.keys);
-	console.log(scoreMap);
+	//console.log(scoreMap);
 	var temp=[]
 
 
@@ -149,7 +148,7 @@ function updateWeights(currUser,usersList,weightsCurr){
 		}
 		
 	});
-	console.log(weightsCurr);
+	//console.log(weightsCurr);
 	return weightsCurr;
 }
 function personalityComparator(currPersonality, userPersonality) {
@@ -245,6 +244,8 @@ module.exports = {
 }
 
 /*
+
+To calculate score without weights;
 function findFriends(currUser, usersList) {
 
 	var potentialFriends = [];
