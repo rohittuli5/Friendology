@@ -2,11 +2,13 @@ import axios from "axios";
 
 const API_URL = "users";
 
-const signup = (first,last,email, password) => {
+const signup = (age,gender,email, password) => {
   return axios
     .post(API_URL + "/signup", {
       email,
       password,
+      // age,
+      // gender
     })
     .then((response) => {
               localStorage.setItem("user", JSON.stringify(response.data));

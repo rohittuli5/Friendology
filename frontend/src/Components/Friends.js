@@ -10,6 +10,8 @@ import Button from 'react-bootstrap/Button'
 // import ListGroup from 'react-bootstrap/ListGroup'
 const Friends = () => {
   const [friends,setFriends]=useState("")
+  const [friendsvalue,setValue]=useState("")
+
   const navigate = useNavigate();
   // setCurrentUser(localStorage.getItem("user"))
   useEffect(() => {
@@ -17,15 +19,18 @@ const Friends = () => {
    
     AuthService.getFriends(email).then(
       (response) => {
-        console.log(JSON.parse(response))
         var res=[]
+        var values=[]
         var obj=JSON.parse(response)
-        for(var i in JSON.parse(response))
+        console.log(obj)
+        for(var i in obj['potentialFriends'])
         {
-          console.log(obj[i].key)
-          res.push(obj[i].key)
+          // console.log("hello",obj['potentialFriends'][i])
+          res.push(obj['potentialFriends'][i].key)
+          values.push(obj['potentialFriends'][i].value)
         }
         setFriends(res);
+        setValue(values);
       },
       (error) => {
         console.log("Error", error.response);
@@ -37,7 +42,7 @@ const Friends = () => {
     for (var i in friends)
     {
       // listfriends.push(<ListGroup.Item>{friends[i]}</ListGroup.Item>)
-      listfriends.push(<ListGroup.Item action href={'#'+friends[i].email}>{friends[i].email}</ListGroup.Item>)
+      listfriends.push(<ListGroup.Item className="list-group-item d-flex justify-content-between align-items-center" action href={'#'+friends[i].email}>{friends[i].email}  <Badge pill bg="danger">{friendsvalue[i]}</Badge></ListGroup.Item>)
 
     }
 
@@ -76,7 +81,7 @@ const Friends = () => {
         </div>
         <div className="col">
         <span>
-        Kids: {friends[i].setKids} 
+        Kids: {friends[i].have_kids} 
         </span>
         </div>
       </div>
@@ -112,7 +117,7 @@ const Friends = () => {
         </div>
         <div className="col">
         <span>
-        ORP: {friends[i].optimist_realist_pessimist} 
+        Optimism Level: {friends[i].optimist_realist_pessimist} 
         </span>
         </div>
       </div>
@@ -146,7 +151,7 @@ const Friends = () => {
       </div>
     </ListGroupItem>
   </ListGroup>
-    <Button href="#">Add Friend</Button>
+    {/* <Button href="#">Add Friend</Button> */}
   </Card.Body>
 </Card>
         </Tab.Pane>)
@@ -163,9 +168,9 @@ const Friends = () => {
 
 
   return (
-    <div style={{backgroundColor: 'gray'}}>
-      <h1 style={{color:'#ffffff'}}>Recomended Friends List</h1>
-      <hr />
+    <div >
+      <h1 style={{color:'#ffffff', textAlign:'center'}}>Recomended Friends List</h1>
+      <hr style={{color:'#ffffff'}}/>
 <Tab.Container id="list-group-tabs-example" 
 >
   <Row>
