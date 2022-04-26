@@ -11,8 +11,8 @@ const signup = (age,gender,email, password) => {
       // gender
     })
     .then((response) => {
-              localStorage.setItem("user", JSON.stringify(response.data));
-                              localStorage.setItem("email", email);
+              // localStorage.setItem("user", JSON.stringify(response.data));
+              //                 localStorage.setItem("email", email);
 
 
       return response.data;
