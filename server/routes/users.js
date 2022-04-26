@@ -143,6 +143,49 @@ router.route('/findFriends').post(async (req, res) => {
 
 });
 
+router.post('/addFriends',(req,res)=>{
+	const friends=req.body.friends;
+	const email=req.body.email;
+	const password=req.body.password;
+	const filter = {
+		email: email,
+		password: password
+	};
+	User.findOne(filter, function (err, foundUsers) {
+		if (err) {
+			res.status(400).json("Error: "+err)
+		} else {
+			if (foundUsers) {
+				// console.log(foundUsers);
+				var friendsList=new Set();
+				foundUsers.friends.forEach(friend=>{
+					friendsList.add(friend);
+				}) 
+				friends.forEach(friend => {
+					if(!friendsList.has(friend)){
+						foundUsers.friends.push(friend);
+					}
+				});
+				var update = foundUsers;
+				User.findOneAndUpdate(filter, update,{new:true},function (err,user) {
+					if (err) {
+						res.status(400).json("Error: "+err);
+					} else {
+						if(!user){
+							res.status(400).json("Email or Password is incorrect");
+						}else{
+							res.status(200).json(user);
+						}
+					}
+				});
+			
+			}else{
+				res.status(400).json("Email or password is incorrect");
+			}
+		}
+	});
+	
+});
 
 router.post('/list', (req, res) => {
 	User.find({}, function (err, curr_user) {
