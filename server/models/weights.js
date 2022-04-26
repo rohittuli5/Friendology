@@ -55,7 +55,7 @@ const weightSchema =new Schema({
     },
     hobbies:{
         type:Number,
-        default:1,
+        default:2,
 
     },
     profession:{
