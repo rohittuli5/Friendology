@@ -134,7 +134,6 @@ router.route('/findFriends').post(async (req, res) => {
 				let potentialFriends = friends.findFriends(currUser, usersList,weightsCurr);
 				res.status(200).json({potentialFriends,weightsCurr});
 			});
-			// const weightsCurr=await query.exec();
 
 		}
 	});
